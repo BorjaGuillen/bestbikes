@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <f:view contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>Best Bikes</title>
+            </f:facet>
+            <style>
+                .ui-widget, .ui-widget .ui-widget {
+                    font-size: 90% !important;
+                }                
+            </style>
+        </h:head>
+
+        <h:body>
+            <h:form>
+                <p:growl id="growl" life="2000" />
+
+                <p:layout fullPage="true">
+
+                    <p:layoutUnit position="north" size="100" resizable="true" closable="true" collapsible="true">
+                        Header
+                    </p:layoutUnit>
+
+                    <p:layoutUnit position="south" size="100" closable="true" collapsible="true">
+                        Footer
+                    </p:layoutUnit>
+
+                    <p:layoutUnit position="west" size="200" header="Filtros" collapsible="true">
+
+                        <h:outputText value="Categoria:" />
+
+                        <p:selectOneListbox id="advanced" value="#{controlMB.filter}"  var="t" filter="true" filterMatchMode="contains">
+                            <f:selectItems value="#{controlMB.filters}" var="filter" itemLabel="#{filter.filterdesc}" itemValue="#{filter}" />
+
+                            <p:column>
+                                <h:outputText styleClass="ui-theme ui-theme-#{t.filterdesc}" />
+                            </p:column>
+
+                            <p:column>
+                                <h:outputText value="#{t.filtercount}" />
+                            </p:column>
+                        </p:selectOneListbox>
+
+                        <p:commandButton value="Buscar" update="display growl" icon="ui-icon-search" actionListener="#{controlMB.buscar}"/>
+
+                    </p:layoutUnit>
+
+                    <p:layoutUnit position="center">
+                        <p:dataTable var="item" value="#{controlMB.items}" id="display"
+                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+                                     paginator="true" 
+                                     rows="25" 
+                                     style="margin-bottom:20px"                                     
+                                     >
+                            <p:column headerText="Numero">
+                                <h:outputText value="#{item.number}" />
+                            </p:column>
+
+                            <p:column headerText="Categoria">
+                                <h:outputText value="#{item.categorykey}" />
+                            </p:column>
+
+                            <p:column headerText="Descripción">
+                                <h:outputText value="#{item.description1}" />
+                            </p:column>
+
+                            <p:column headerText="Disp.">
+                                <h:outputText value="#{item.availablestatusdesc}" />
+                            </p:column>
+
+                            <p:column headerText="Precio">
+                                <h:outputText value="#{item.unitprice}" />
+                            </p:column>
+
+                            <p:column headerText="Cargar">
+                                <p:selectBooleanButton id="value1" value="true" onLabel="Si" offLabel="No" style="width:60px" />
+                            </p:column>
+
+                        </p:dataTable>
+                    </p:layoutUnit>
+
+                </p:layout>
+            </h:form>
+
+        </h:body>
+
+    </f:view>
+</html>
+

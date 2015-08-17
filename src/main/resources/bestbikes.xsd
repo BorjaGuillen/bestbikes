@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    
+    <xs:element name="root">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="ns1:processtype"/>
+                <xs:element ref="ns1:processstatus"/>
+                <xs:element ref="ns1:processmessage"/>
+                <xs:element ref="ns1:GUID"/>
+                <xs:element ref="ns1:page"/>
+                <xs:element ref="ns1:ofpages"/>
+                <xs:element ref="ns1:filter"/>
+                <xs:element ref="ns1:item" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="processtype"    type="xs:string"/>
+    <xs:element name="processstatus"  type="xs:string"/>
+    <xs:element name="processmessage" type="xs:string"/>
+    <xs:element name="GUID"           type="xs:string"/>
+    <xs:element name="page"           type="xs:integer"/>
+    <xs:element name="ns1:ofpages"    type="xs:integer"/>
+    <xs:element name="dni"            type="xs:integer"/>
+    <xs:element name="estadoCivil"    type="xs:string"/>
+    
+    <xs:element name="filter">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="ns1:filterkey"/>
+                <xs:element ref="ns1:filtercount"/>
+                <xs:element ref="ns1:filterdesc"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="filterkey"   type="xs:string"/>
+    <xs:element name="filtercount" type="xs:integer"/>
+    <xs:element name="filterdesc"  type="xs:string"/>
+    
+
+    <xs:element name="item">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="ns1:number"/>
+                <xs:element ref="ns1:unitprice"/>
+                <xs:element ref="ns1:scaledunitprice"/>
+                <xs:element ref="ns1:recommendedretailprice"/>
+                <xs:element ref="ns1:description1"/>
+                <xs:element ref="ns1:description2"/>
+                <xs:element ref="ns1:availablestatus"/>
+                <xs:element ref="ns1:availablestatusdesc"/>
+                <xs:element ref="ns1:supplieritemnumber"/>
+                <xs:element ref="ns1:tax"/>
+                <xs:element ref="ns1:ean"/>
+                <xs:element ref="ns1:manufacturerean"/>
+                <xs:element ref="ns1:customstariffnumber"/>
+                <xs:element ref="ns1:supplier"/>
+                <xs:element ref="ns1:categorykey"/>
+                <xs:element ref="ns1:infourl"/>
+                <xs:element ref="ns1:pictureurl"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="number"                 type="xs:integer"/>
+    <xs:element name="unitprice"              type="xs:double"/>
+    <xs:element name="scaledunitprice"        type="xs:double"/>
+    <xs:element name="recommendedretailprice" type="xs:double"/>
+    <xs:element name="description1"           type="xs:string"/>
+    <xs:element name="description2"           type="xs:string"/>
+    <xs:element name="availablestatus"        type="xs:string"/>
+    <xs:element name="availablestatusdesc"    type="xs:string"/>
+    <xs:element name="supplieritemnumber"     type="xs:string"/>
+    <xs:element name="tax"                    type="xs:double"/>
+    <xs:element name="ean"                    type="xs:string"/>
+    <xs:element name="manufacturerean"        type="xs:string"/>
+    <xs:element name="customstariffnumber"    type="xs:string"/>
+    <xs:element name="supplier"               type="xs:string"/>
+    <xs:element name="categorykey"            type="xs:string"/>
+    <xs:element name="infourl"                type="xs:string"/>
+    <xs:element name="pictureurl"             type="xs:string"/>
+
+    
+</xs:schema>
