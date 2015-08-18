@@ -21,42 +21,62 @@
         <h:body>
             <h:form>
                 <p:growl id="growl" life="2000" />
+               
+                <p:ajaxStatus style="display:block;margin-bottom:2em;height:24px;">
+                    <f:facet name="default">
+                        <h:outputText value="Status: StandBy" />
+                    </f:facet>
+
+                    <f:facet name="start">
+                        <img src="images/ajaxloadingbar.gif" alt=""/>
+                    </f:facet>
+
+                    <f:facet name="complete">
+                        <h:outputText value="Status: Completed" />
+                    </f:facet>
+                </p:ajaxStatus>
+                
+                <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+
+                <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                    <img src="images/ajaxloadingbar.gif" alt=""/>
+                </p:dialog>                
+                
+                
 
                 <p:layout fullPage="true">
 
                     <p:layoutUnit position="north" size="100" resizable="true" closable="true" collapsible="true">
-                        Header
+                        <img src="../images/logo.jpg" alt=""/>
                     </p:layoutUnit>
 
                     <p:layoutUnit position="south" size="100" closable="true" collapsible="true">
-                        Footer
+                        <p:commandButton value="Cargar" update="display" actionListener="#{controlMB.cargar}" />
                     </p:layoutUnit>
 
-                    <p:layoutUnit position="west" size="200" header="Filtros" collapsible="true">
-
-                        <h:outputText value="Categoria:" />
-
-                        <p:selectOneListbox id="advanced" value="#{controlMB.filter}"  var="t" filter="true" filterMatchMode="contains">
-                            <f:selectItems value="#{controlMB.filters}" var="filter" itemLabel="#{filter.filterdesc}" itemValue="#{filter}" />
-
-                            <p:column>
-                                <h:outputText styleClass="ui-theme ui-theme-#{t.filterdesc}" />
-                            </p:column>
-
-                            <p:column>
-                                <h:outputText value="#{t.filtercount}" />
-                            </p:column>
-                        </p:selectOneListbox>
-
-                        <p:commandButton value="Buscar" update="display growl" icon="ui-icon-search" actionListener="#{controlMB.buscar}"/>
-
-                    </p:layoutUnit>
 
                     <p:layoutUnit position="center">
-                        <p:dataTable var="item" value="#{controlMB.items}" id="display"
-                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+                        <h:panelGrid columns="4" cellpadding="5">
+                            <h:outputText value="Categoria:" />
+                            <p:selectOneMenu value="#{controlMB.filter}" converter="filterConverter">
+                                <f:selectItem itemLabel="Selecciona una categoría" itemValue=""/>
+                                <f:selectItems value="#{controlMB.filters}" var="filter" itemLabel="#{filter.filterdesc}" itemValue="#{filter}" />
+                                <f:ajax listener="#{controlMB.buscar}" render="display growl" />
+                            </p:selectOneMenu>
+
+                            <p:commandButton value="Todos" update="display" actionListener="#{controlMB.marcarTodos}" />
+
+                            <p:commandButton value="Ninguno" update="display" actionListener="#{controlMB.desmarcarTodos}" />
+                        </h:panelGrid>
+                        
+                        <p:dataTable id="display"
+                                     value="#{controlMB.items}" 
+                                     var="item" 
                                      paginator="true" 
                                      rows="25" 
+                                     rowsPerPageTemplate="25,50,100" 
+                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                                     currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} resultados"
                                      style="margin-bottom:20px"                                     
                                      >
                             <p:column headerText="Numero">
@@ -80,7 +100,7 @@
                             </p:column>
 
                             <p:column headerText="Cargar">
-                                <p:selectBooleanButton id="value1" value="true" onLabel="Si" offLabel="No" style="width:60px" />
+                                <p:selectBooleanButton id="value1" value="#{item.cargar}" onLabel="Si" offLabel="No" style="width:60px" />
                             </p:column>
 
                         </p:dataTable>
