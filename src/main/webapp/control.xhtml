@@ -28,18 +28,18 @@
                     </f:facet>
 
                     <f:facet name="start">
-                        <h:graphicImage url="img/ajaxloadingbar.gif" />                    
+                        <img src="images/ajaxloadingbar.gif" alt=""/>
                     </f:facet>
 
                     <f:facet name="complete">
                         <h:outputText value="Status: Completed" />
                     </f:facet>
                 </p:ajaxStatus>
-
+                
                 <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
 
                 <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
-                    <h:graphicImage url="img/ajaxloadingbar.gif" />                    
+                    <img src="images/ajaxloadingbar.gif" alt=""/>
                 </p:dialog>                
                 
                 
@@ -47,7 +47,7 @@
                 <p:layout fullPage="true">
 
                     <p:layoutUnit position="north" size="100" resizable="true" closable="true" collapsible="true">
-                        
+                        <img src="../images/logo.jpg" alt=""/>
                     </p:layoutUnit>
 
                     <p:layoutUnit position="south" size="100" closable="true" collapsible="true">
