@@ -5,6 +5,8 @@
  */
 package es.bestbikes.mb;
 
+import es.bestbikes.bean.FilterBean;
+import es.bestbikes.bean.ItemBean;
 import es.bestbikes.bean.PeticionBean;
 import es.bestbikes.jaxb.Filter;
 import es.bestbikes.jaxb.Item;
@@ -13,9 +15,12 @@ import es.bestbikes.servicios.PeticionSrv;
 import es.bestbikes.types.TypeJaxb;
 import es.bestbikes.util.Config;
 import es.bestbikes.util.JaxbUtil;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
 /**
@@ -23,25 +28,22 @@ import javax.faces.context.FacesContext;
  * @author jorge
  */
 @ManagedBean
+@ViewScoped
 public class ControlMB {
     
     private PeticionBean peticion;
     
-    private List<Filter> filters;
+    private List<FilterBean> filters;
     
-    private Filter filter;
+    private FilterBean filter;
 
-    private List<Item> items;
+    private List<ItemBean> items;
     
     private PeticionSrv srv = PeticionSrv.getInstance();
 
     public ControlMB() {
         srv = PeticionSrv.getInstance();
-        
-        String salida = srv.buscarCategorias();
-        Root xml = (Root) JaxbUtil.unmarshall(salida, TypeJaxb.BEST_BIKES);
-        
-        filters = xml.getFilter();
+        filters = srv.buscarCategorias();
     }
 
     public PeticionBean getPeticion() {
@@ -52,54 +54,56 @@ public class ControlMB {
         this.peticion = peticion;
     }
 
-    public List<Item> getItems() {
+    public List<ItemBean> getItems() {
         return items;
     }
 
-    public void setItems(List<Item> items) {
+    public void setItems(List<ItemBean> items) {
         this.items = items;
     }
 
-    public List<Filter> getFilters() {
+    public List<FilterBean> getFilters() {
         return filters;
     }
 
-    public void setFilters(List<Filter> filters) {
+    public void setFilters(List<FilterBean> filters) {
         this.filters = filters;
     }
 
-    public Filter getFilter() {
+    public FilterBean getFilter() {
         return filter;
     }
 
-    public void setFilter(Filter filter) {
+    public void setFilter(FilterBean filter) {
         this.filter = filter;
     }
     
-    
-    
-    
     public void buscar() {
-        PeticionBean p = new PeticionBean();
-        p.setUrl(Config.getInstance().get("b2b.url"));
-        p.setLoginid(Config.getInstance().get("b2b.loginid"));
-        p.setPassword(Config.getInstance().get("b2b.password"));
-        p.setProcesstype(Config.getInstance().get("b2b.processtype"));
-        p.setCategory(Config.getInstance().get("b2b.category"));
-        p.setPagesize(Config.getInstance().get("b2b.pagesize"));
-        p.setPage(Config.getInstance().get("b2b.page"));
-        
-        String salida = srv.buscar(p);
-        
-        Root xml = (Root) JaxbUtil.unmarshall(salida, TypeJaxb.BEST_BIKES);
-        items = xml.getItem();
-        
+        items = srv.buscarItems();
         addMessage("Busqueda realizada!!");
     }
+    
+    
+    public void marcarTodos() {
+        items = srv.marcarTodos(items, true);
+        addMessage("Artículos marcados");
+    }
      
+    public void desMarcarTodos() {
+        items = srv.marcarTodos(items, false);
+        addMessage("Artículos desmarcados");
+    }
+
+    public void cargar() {
+        addMessage("Artículos cargados");
+    }
+
+    
     public void addMessage(String summary) {
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, summary,  null);
         FacesContext.getCurrentInstance().addMessage(null, message);
     }    
+    
+    
     
 }
