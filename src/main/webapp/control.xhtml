@@ -28,7 +28,7 @@
                     </f:facet>
 
                     <f:facet name="start">
-                        <img src="images/ajaxloadingbar.gif" alt=""/>
+                        <img src="../images/ajaxloadingbar.gif" alt=""/>
                     </f:facet>
 
                     <f:facet name="complete">
@@ -39,7 +39,7 @@
                 <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
 
                 <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
-                    <img src="images/ajaxloadingbar.gif" alt=""/>
+                    <img src="../images/ajaxloadingbar.gif" alt=""/>
                 </p:dialog>                
                 
                 
@@ -51,7 +51,7 @@
                     </p:layoutUnit>
 
                     <p:layoutUnit position="south" size="100" closable="true" collapsible="true">
-                        <p:commandButton value="Cargar" update="display" actionListener="#{controlMB.cargar}" />
+                        <p:commandButton value="Cargar" update="display growl" actionListener="#{controlMB.cargar}" />
                     </p:layoutUnit>
 
 
@@ -64,9 +64,9 @@
                                 <f:ajax listener="#{controlMB.buscar}" render="display growl" />
                             </p:selectOneMenu>
 
-                            <p:commandButton value="Todos" update="display" actionListener="#{controlMB.marcarTodos}" />
+                            <p:commandButton value="Todos" update="display growl" actionListener="#{controlMB.marcarTodos}" />
 
-                            <p:commandButton value="Ninguno" update="display" actionListener="#{controlMB.desmarcarTodos}" />
+                            <p:commandButton value="Ninguno" update="display growl" actionListener="#{controlMB.desMarcarTodos}" />
                         </h:panelGrid>
                         
                         <p:dataTable id="display"
