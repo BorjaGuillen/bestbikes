@@ -103,7 +103,7 @@ public class ProductoBBDD extends ControlBBDD{
             
             
         } catch (Exception e) {
-            Trazas.trazar(e.getMessage());
+            Trazas.trazarError(e.getMessage());
             throw new  ControlBbddException ("error al insertar un producto en BD"+productoNuevo.toString());
         }
     
