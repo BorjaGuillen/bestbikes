@@ -1,15 +1,14 @@
+package es.bestbikes.converter;
+
 
 import es.bestbikes.bean.FilterBean;
 import es.bestbikes.jaxb.Filter;
-import es.bestbikes.mb.ControlMB;
 import es.bestbikes.servicios.PeticionSrv;
 import java.util.Iterator;
 import java.util.List;
-import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
-import javax.faces.convert.ConverterException;
 import javax.faces.convert.FacesConverter;
 
 /*

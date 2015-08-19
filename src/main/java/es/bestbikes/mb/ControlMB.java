@@ -8,16 +8,11 @@ package es.bestbikes.mb;
 import es.bestbikes.bean.FilterBean;
 import es.bestbikes.bean.ItemBean;
 import es.bestbikes.bean.PeticionBean;
-import es.bestbikes.jaxb.Filter;
-import es.bestbikes.jaxb.Item;
-import es.bestbikes.jaxb.Root;
 import es.bestbikes.servicios.PeticionSrv;
-import es.bestbikes.types.TypeJaxb;
-import es.bestbikes.util.Config;
-import es.bestbikes.util.JaxbUtil;
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -29,21 +24,25 @@ import javax.faces.context.FacesContext;
  */
 @ManagedBean
 @ViewScoped
-public class ControlMB {
+public class ControlMB implements Serializable {
     
     private PeticionBean peticion;
     
     private List<FilterBean> filters;
     
-    private FilterBean filter;
+    private String filter;
 
     private List<ItemBean> items;
     
     private PeticionSrv srv = PeticionSrv.getInstance();
+    
+    private int porcentaje;
 
-    public ControlMB() {
+    @PostConstruct
+    public void init() {
         srv = PeticionSrv.getInstance();
         filters = srv.buscarCategorias();
+        porcentaje = 15;
     }
 
     public PeticionBean getPeticion() {
@@ -70,17 +69,28 @@ public class ControlMB {
         this.filters = filters;
     }
 
-    public FilterBean getFilter() {
+    public String getFilter() {
         return filter;
     }
 
-    public void setFilter(FilterBean filter) {
+    public void setFilter(String filter) {
         this.filter = filter;
     }
     
     public void buscar() {
-        items = srv.buscarItems();
-        addMessage("Busqueda realizada!!");
+        if (filter == null || "".equals(filter)) {
+            addMessage("Seleccione una categoría");
+        } else {
+            long numitems = 0;
+            for (Iterator<FilterBean> iterator = filters.iterator(); iterator.hasNext();) {
+                FilterBean next = iterator.next();
+                if (next.getFilterkey().equals(filter)) {
+                    numitems = next.getFiltercount().longValue();
+                }
+            }
+            items = srv.buscarItems(filter, numitems);
+            addMessage("Busqueda realizada (" + filter + ")");
+        }
     }
     
     
@@ -104,6 +114,12 @@ public class ControlMB {
         FacesContext.getCurrentInstance().addMessage(null, message);
     }    
     
-    
+    public int getPorcentaje() {
+        return porcentaje;
+    }
+
+    public void setPorcentaje(int porcentaje) {
+        this.porcentaje = porcentaje;
+    }
     
 }

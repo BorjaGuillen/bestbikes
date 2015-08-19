@@ -183,30 +183,30 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link Double }{@code >}}
+     * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
      * 
      */
     @XmlElementDecl(namespace = "", name = "unitprice")
-    public JAXBElement<Double> createUnitprice(Double value) {
-        return new JAXBElement<Double>(_Unitprice_QNAME, Double.class, null, value);
+    public JAXBElement<String> createUnitprice(String value) {
+        return new JAXBElement<String>(_Unitprice_QNAME, String.class, null, value);
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link Double }{@code >}}
+     * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
      * 
      */
     @XmlElementDecl(namespace = "", name = "scaledunitprice")
-    public JAXBElement<Double> createScaledunitprice(Double value) {
-        return new JAXBElement<Double>(_Scaledunitprice_QNAME, Double.class, null, value);
+    public JAXBElement<String> createScaledunitprice(String value) {
+        return new JAXBElement<String>(_Scaledunitprice_QNAME, String.class, null, value);
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link Double }{@code >}}
+     * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
      * 
      */
     @XmlElementDecl(namespace = "", name = "recommendedretailprice")
-    public JAXBElement<Double> createRecommendedretailprice(Double value) {
-        return new JAXBElement<Double>(_Recommendedretailprice_QNAME, Double.class, null, value);
+    public JAXBElement<String> createRecommendedretailprice(String value) {
+        return new JAXBElement<String>(_Recommendedretailprice_QNAME, String.class, null, value);
     }
 
     /**

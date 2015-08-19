@@ -46,24 +46,39 @@
 
                 <p:layout fullPage="true">
 
-                    <p:layoutUnit position="north" size="100" resizable="true" closable="true" collapsible="true">
-                        <img src="../images/logo.jpg" alt=""/>
+                    <p:layoutUnit position="north" size="135" resizable="true" closable="true" collapsible="true">
+                        <div style="width: 100%; background-color: #abd442; text-align: right;">
+                            <img src="../images/logo-bestbike-pie.png" alt=""/>    
+                        </div>
                     </p:layoutUnit>
 
                     <p:layoutUnit position="south" size="100" closable="true" collapsible="true">
-                        <p:commandButton value="Cargar" update="display growl" actionListener="#{controlMB.cargar}" />
+                        <div style="width: 400px; margin: 0 auto;">
+                            <h:panelGrid columns="2">
+                                <h:panelGrid columns="1" style="margin-bottom: 10px">
+                                    <h:outputText id="output" value="Porcentaje precio a %#{controlMB.porcentaje}" />
+                                    <h:inputHidden id="txt2" value="#{controlMB.porcentaje}" />
+                                    <p:slider for="txt2" display="output" style="width: 200px" displayTemplate="Porcentaje precio a %{value}" />
+                                </h:panelGrid>
+
+                                <p:commandButton value="Cargar" update="display growl" actionListener="#{controlMB.cargar}" />
+                            </h:panelGrid>
+                        </div>
                     </p:layoutUnit>
 
 
                     <p:layoutUnit position="center">
-                        <h:panelGrid columns="4" cellpadding="5">
+                        <h:panelGrid columns="5" cellpadding="5">
                             <h:outputText value="Categoria:" />
-                            <p:selectOneMenu value="#{controlMB.filter}" converter="filterConverter">
-                                <f:selectItem itemLabel="Selecciona una categoría" itemValue=""/>
-                                <f:selectItems value="#{controlMB.filters}" var="filter" itemLabel="#{filter.filterdesc}" itemValue="#{filter}" />
+                            <p:selectOneMenu value="#{controlMB.filter}">
                                 <f:ajax listener="#{controlMB.buscar}" render="display growl" />
+                                <f:selectItem itemLabel="Selecciona una categoría" itemValue=""/>
+                                <f:selectItems value="#{controlMB.filters}" 
+                                               var="fil" 
+                                               itemLabel="#{fil.filterdesc} (#{fil.filtercount})" 
+                                               itemValue="#{fil.filterkey}" />
                             </p:selectOneMenu>
-
+                            
                             <p:commandButton value="Todos" update="display growl" actionListener="#{controlMB.marcarTodos}" />
 
                             <p:commandButton value="Ninguno" update="display growl" actionListener="#{controlMB.desMarcarTodos}" />
@@ -73,8 +88,7 @@
                                      value="#{controlMB.items}" 
                                      var="item" 
                                      paginator="true" 
-                                     rows="25" 
-                                     rowsPerPageTemplate="25,50,100" 
+                                     rows="100" 
                                      paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
                                      currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} resultados"
                                      style="margin-bottom:20px"                                     

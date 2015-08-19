@@ -26,7 +26,7 @@ public class JaxbUtil {
             JAXBContext jaxbContext = JAXBContext.newInstance(paquete.getValue());
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 
-            InputStream stream = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8));
+            InputStream stream = new ByteArrayInputStream(xml.getBytes(StandardCharsets.ISO_8859_1));
 
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
             salida = jaxbUnmarshaller.unmarshal(stream);

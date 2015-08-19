@@ -5,22 +5,34 @@
       xmlns:p="http://primefaces.org/ui">
     <h:head>
         <title>BestBikes</title>
+        <style>
+            #contenedor {
+                width: 500px;
+                height: 500px;
+
+                position: absolute;
+                top: 50%;
+                left: 50%;
+
+                margin-top: -250px;   /* height/2 = 500px / 2 */
+                margin-left: -250px;  /* width/2 = 500px / 2 */            
+            }            
+            
+            #botonera {
+                 float: left;
+                 padding-left: 170px;
+                 padding-top: 100px;
+            }
+        </style>
     </h:head>
     <h:body>
-
-        <p:layout style="min-width:400px;min-height:200px;">
-            <p:layoutUnit position="north" resizable="false" size="100" minSize="40" maxSize="200">
-                West
-            </p:layoutUnit>
-
-            <p:layoutUnit position="center">
-                <img src="images/logo.jpg" alt=""/>
-                <br />
-                <h:link outcome="control" value="Inicio" />
-            </p:layoutUnit>
-
-        </p:layout>
-
+        <div id="contenedor">
+            <img src="images/cyclist.png" alt=""/>
+           
+            <div id="botonera">
+                <p:button outcome="control" value="Acceder" icon="ui-icon-triangle-1-e"/>
+            </div>
+        </div>        
     </h:body>
 </html>
 
