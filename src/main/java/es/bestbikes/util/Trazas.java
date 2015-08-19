@@ -5,6 +5,8 @@
  */
 package es.bestbikes.util;
 
+import org.apache.log4j.Logger;
+
 /**
  *
  * @author isthar
@@ -12,9 +14,25 @@ package es.bestbikes.util;
  */
 public class Trazas {
     
-     
+         
     public static void trazar(String mensaje) {
+        Logger log = Logger.getLogger("Logger-bestbike");
+        log.debug(mensaje);
+        
         System.out.println(mensaje);
     }
+     public static void trazarWarning(String mensaje) {
+        Logger log = Logger.getLogger("Logger bestbike");
+        log.warn(mensaje);
+        
+        System.out.println("Aviso: " + mensaje);
+    }
     
+    public static void trazarError(String mensaje) {
+        Logger log = Logger.getLogger("Logger bestbike");
+        log.error(mensaje);
+        
+        System.out.println("Error: "+mensaje);
+    }
+   
 }
