@@ -7,6 +7,8 @@ package es.bestbikes.bean;
 
 import es.bestbikes.jaxb.Item;
 import java.io.Serializable;
+import java.math.BigDecimal;
+
 
 /**
  *
@@ -15,6 +17,10 @@ import java.io.Serializable;
 public class ItemBean extends Item implements Serializable {
     
     private boolean cargar;
+   /**
+    * <p> Precio del producto a cargar, tras haber sido modificado con el incremento que desea el usuario.</p>
+    */    
+    private BigDecimal precioNuevo;
 
     public ItemBean(Item next) {
         this.number = next.getNumber();
@@ -43,6 +49,14 @@ public class ItemBean extends Item implements Serializable {
 
     public void setCargar(boolean cargar) {
         this.cargar = cargar;
+    }
+    
+     public void setPrecioNuevo(BigDecimal precioNuevo) {
+        this.precioNuevo = precioNuevo;
+    }
+
+    public BigDecimal getPrecioNuevo() {
+        return precioNuevo;
     }
     
     

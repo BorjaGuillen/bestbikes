@@ -74,7 +74,7 @@ public class ProductoBBDD extends ControlBBDD{
             producto.setOnSale(false);
             producto.setOutOfStock(0);
             producto.setPackStockType(0);
-            producto.setPrice(BigDecimal.ZERO);
+            producto.setPrice(productoNuevo.getPrecioNuevo());
             producto.setQuantity(0);
             producto.setQuantityDiscount(Boolean.TRUE);
             producto.setRedirectType(null);
@@ -90,16 +90,6 @@ public class ProductoBBDD extends ControlBBDD{
             producto.setWeight(BigDecimal.ZERO);
             producto.setWholesalePrice(BigDecimal.ZERO);
             producto.setWidth(BigDecimal.ZERO);
-            
-            
-            
-            
-            
-                    
-            
-            
-            
-            
             
             
         } catch (Exception e) {
