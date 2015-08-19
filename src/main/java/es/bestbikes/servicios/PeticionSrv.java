@@ -125,26 +125,32 @@ public class PeticionSrv {
         return salida;
     }
 
-    public List<ItemBean> buscarItems(String categoria) {
-        PeticionBean p = new PeticionBean();
-        p.setUrl(Config.getInstance().get("b2b.url"));
-        p.setLoginid(Config.getInstance().get("b2b.loginid"));
-        p.setPassword(Config.getInstance().get("b2b.password"));
-        p.setProcesstype(Config.getInstance().get("b2b.processtype"));
-        //p.setCategory(Config.getInstance().get("b2b.category"));
-        p.setCategory(categoria);
-        p.setPagesize(Config.getInstance().get("b2b.pagesize"));
-        p.setPage(Config.getInstance().get("b2b.page"));
-        
-        String salida = srv.buscar(p);
-        
-        Root xml = (Root) JaxbUtil.unmarshall(salida, TypeJaxb.BEST_BIKES);
-        List<Item> items = xml.getItem();
-        
+    public List<ItemBean> buscarItems(String categoria, long nmitems) {
         List<ItemBean> lista = new ArrayList<ItemBean>();
-        for (Iterator<Item> iterator = items.iterator(); iterator.hasNext();) {
-            Item next = iterator.next();
-            lista.add(new ItemBean(next));
+        
+        int nmpagina = 1;
+        while (lista.size() < nmitems) {
+            PeticionBean p = new PeticionBean();
+            p.setUrl(Config.getInstance().get("b2b.url"));
+            p.setLoginid(Config.getInstance().get("b2b.loginid"));
+            p.setPassword(Config.getInstance().get("b2b.password"));
+            p.setProcesstype(Config.getInstance().get("b2b.processtype"));
+            //p.setCategory(Config.getInstance().get("b2b.category"));
+            p.setCategory(categoria);
+            p.setPagesize(Config.getInstance().get("b2b.pagesize"));
+            p.setPage(nmpagina + "");
+
+            String salida = srv.buscar(p);
+
+            Root xml = (Root) JaxbUtil.unmarshall(salida, TypeJaxb.BEST_BIKES);
+            List<Item> items = xml.getItem();
+
+
+            for (Iterator<Item> iterator = items.iterator(); iterator.hasNext();) {
+                Item next = iterator.next();
+                lista.add(new ItemBean(next));
+            }
+            nmpagina++;
         }
         return lista;
     

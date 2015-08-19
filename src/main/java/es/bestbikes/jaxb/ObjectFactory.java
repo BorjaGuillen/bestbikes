@@ -2,7 +2,7 @@
 // Este archivo ha sido generado por la arquitectura JavaTM para la implantación de la referencia de enlace (JAXB) XML v2.2.11 
 // Visite <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Todas las modificaciones realizadas en este archivo se perderán si se vuelve a compilar el esquema de origen. 
-// Generado el: 2015.08.19 a las 06:53:54 PM CEST 
+// Generado el: 2015.08.19 a las 08:04:30 PM CEST 
 //
 
 
@@ -183,30 +183,30 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link Double }{@code >}}
+     * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
      * 
      */
     @XmlElementDecl(namespace = "", name = "unitprice")
-    public JAXBElement<Double> createUnitprice(Double value) {
-        return new JAXBElement<Double>(_Unitprice_QNAME, Double.class, null, value);
+    public JAXBElement<String> createUnitprice(String value) {
+        return new JAXBElement<String>(_Unitprice_QNAME, String.class, null, value);
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link Double }{@code >}}
+     * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
      * 
      */
     @XmlElementDecl(namespace = "", name = "scaledunitprice")
-    public JAXBElement<Double> createScaledunitprice(Double value) {
-        return new JAXBElement<Double>(_Scaledunitprice_QNAME, Double.class, null, value);
+    public JAXBElement<String> createScaledunitprice(String value) {
+        return new JAXBElement<String>(_Scaledunitprice_QNAME, String.class, null, value);
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link Double }{@code >}}
+     * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
      * 
      */
     @XmlElementDecl(namespace = "", name = "recommendedretailprice")
-    public JAXBElement<Double> createRecommendedretailprice(Double value) {
-        return new JAXBElement<Double>(_Recommendedretailprice_QNAME, Double.class, null, value);
+    public JAXBElement<String> createRecommendedretailprice(String value) {
+        return new JAXBElement<String>(_Recommendedretailprice_QNAME, String.class, null, value);
     }
 
     /**

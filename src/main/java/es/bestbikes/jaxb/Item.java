@@ -2,7 +2,7 @@
 // Este archivo ha sido generado por la arquitectura JavaTM para la implantación de la referencia de enlace (JAXB) XML v2.2.11 
 // Visite <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Todas las modificaciones realizadas en este archivo se perderán si se vuelve a compilar el esquema de origen. 
-// Generado el: 2015.08.19 a las 06:53:54 PM CEST 
+// Generado el: 2015.08.19 a las 08:04:30 PM CEST 
 //
 
 
@@ -76,9 +76,12 @@ public class Item {
 
     @XmlElement(required = true)
     protected BigInteger number;
-    protected double unitprice;
-    protected double scaledunitprice;
-    protected double recommendedretailprice;
+    @XmlElement(required = true)
+    protected String unitprice;
+    @XmlElement(required = true)
+    protected String scaledunitprice;
+    @XmlElement(required = true)
+    protected String recommendedretailprice;
     @XmlElement(required = true)
     protected String description1;
     @XmlElement(required = true)
@@ -132,48 +135,72 @@ public class Item {
     /**
      * Obtiene el valor de la propiedad unitprice.
      * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
      */
-    public double getUnitprice() {
+    public String getUnitprice() {
         return unitprice;
     }
 
     /**
      * Define el valor de la propiedad unitprice.
      * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
      */
-    public void setUnitprice(double value) {
+    public void setUnitprice(String value) {
         this.unitprice = value;
     }
 
     /**
      * Obtiene el valor de la propiedad scaledunitprice.
      * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
      */
-    public double getScaledunitprice() {
+    public String getScaledunitprice() {
         return scaledunitprice;
     }
 
     /**
      * Define el valor de la propiedad scaledunitprice.
      * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
      */
-    public void setScaledunitprice(double value) {
+    public void setScaledunitprice(String value) {
         this.scaledunitprice = value;
     }
 
     /**
      * Obtiene el valor de la propiedad recommendedretailprice.
      * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
      */
-    public double getRecommendedretailprice() {
+    public String getRecommendedretailprice() {
         return recommendedretailprice;
     }
 
     /**
      * Define el valor de la propiedad recommendedretailprice.
      * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
      */
-    public void setRecommendedretailprice(double value) {
+    public void setRecommendedretailprice(String value) {
         this.recommendedretailprice = value;
     }
 

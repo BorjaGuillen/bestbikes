@@ -10,6 +10,7 @@ import es.bestbikes.bean.ItemBean;
 import es.bestbikes.bean.PeticionBean;
 import es.bestbikes.servicios.PeticionSrv;
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -34,11 +35,14 @@ public class ControlMB implements Serializable {
     private List<ItemBean> items;
     
     private PeticionSrv srv = PeticionSrv.getInstance();
+    
+    private int porcentaje;
 
     @PostConstruct
     public void init() {
         srv = PeticionSrv.getInstance();
         filters = srv.buscarCategorias();
+        porcentaje = 15;
     }
 
     public PeticionBean getPeticion() {
@@ -77,7 +81,14 @@ public class ControlMB implements Serializable {
         if (filter == null || "".equals(filter)) {
             addMessage("Seleccione una categoría");
         } else {
-            items = srv.buscarItems(filter);
+            long numitems = 0;
+            for (Iterator<FilterBean> iterator = filters.iterator(); iterator.hasNext();) {
+                FilterBean next = iterator.next();
+                if (next.getFilterkey().equals(filter)) {
+                    numitems = next.getFiltercount().longValue();
+                }
+            }
+            items = srv.buscarItems(filter, numitems);
             addMessage("Busqueda realizada (" + filter + ")");
         }
     }
@@ -103,5 +114,12 @@ public class ControlMB implements Serializable {
         FacesContext.getCurrentInstance().addMessage(null, message);
     }    
     
+    public int getPorcentaje() {
+        return porcentaje;
+    }
+
+    public void setPorcentaje(int porcentaje) {
+        this.porcentaje = porcentaje;
+    }
     
 }
