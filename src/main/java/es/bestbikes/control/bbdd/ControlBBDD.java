@@ -5,8 +5,9 @@
  */
 package es.bestbikes.control.bbdd;
 
+import es.bestbikes.bean.ItemBean;
 import es.bestbikes.exception.ControlBbddException;
-import es.bestbikes.jaxb.Item;
+import es.bestbikes.util.Trazas;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -30,9 +31,4 @@ public class ControlBBDD {
     
     }
     
-    public Integer insertarProductoNuevo(Item productoNuevo)  throws ControlBbddException  {
-    
-    return 1;
-    
-    }
 }
