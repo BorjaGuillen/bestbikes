@@ -8,16 +8,10 @@ package es.bestbikes.mb;
 import es.bestbikes.bean.FilterBean;
 import es.bestbikes.bean.ItemBean;
 import es.bestbikes.bean.PeticionBean;
-import es.bestbikes.jaxb.Filter;
-import es.bestbikes.jaxb.Item;
-import es.bestbikes.jaxb.Root;
 import es.bestbikes.servicios.PeticionSrv;
-import es.bestbikes.types.TypeJaxb;
-import es.bestbikes.util.Config;
-import es.bestbikes.util.JaxbUtil;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.io.Serializable;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -29,19 +23,20 @@ import javax.faces.context.FacesContext;
  */
 @ManagedBean
 @ViewScoped
-public class ControlMB {
+public class ControlMB implements Serializable {
     
     private PeticionBean peticion;
     
     private List<FilterBean> filters;
     
-    private FilterBean filter;
+    private String filter;
 
     private List<ItemBean> items;
     
     private PeticionSrv srv = PeticionSrv.getInstance();
 
-    public ControlMB() {
+    @PostConstruct
+    public void init() {
         srv = PeticionSrv.getInstance();
         filters = srv.buscarCategorias();
     }
@@ -70,17 +65,21 @@ public class ControlMB {
         this.filters = filters;
     }
 
-    public FilterBean getFilter() {
+    public String getFilter() {
         return filter;
     }
 
-    public void setFilter(FilterBean filter) {
+    public void setFilter(String filter) {
         this.filter = filter;
     }
     
     public void buscar() {
-        items = srv.buscarItems();
-        addMessage("Busqueda realizada!!");
+        if (filter == null || "".equals(filter)) {
+            addMessage("Seleccione una categoría");
+        } else {
+            items = srv.buscarItems(filter);
+            addMessage("Busqueda realizada (" + filter + ")");
+        }
     }
     
     
@@ -103,7 +102,6 @@ public class ControlMB {
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, summary,  null);
         FacesContext.getCurrentInstance().addMessage(null, message);
     }    
-    
     
     
 }

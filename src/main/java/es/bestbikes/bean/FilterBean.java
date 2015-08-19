@@ -6,12 +6,13 @@
 package es.bestbikes.bean;
 
 import es.bestbikes.jaxb.Filter;
+import java.io.Serializable;
 
 /**
  *
  * @author jorge
  */
-public class FilterBean extends Filter{
+public class FilterBean extends Filter implements Serializable {
 
     public FilterBean(Filter filter) {
         this.filtercount = filter.getFiltercount();
@@ -45,10 +46,11 @@ public class FilterBean extends Filter{
         if (other.getFilterkey() == null) {
             return false;
         }
-        if (!this.filterkey.equals(other.getFilterdesc())) {
-            return false;
+        if (this.filterkey.equals(other.getFilterdesc())) {
+            return true;
         }
-        return true;
+        return false;
+        
     }
     
     

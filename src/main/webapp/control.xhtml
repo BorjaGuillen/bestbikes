@@ -56,14 +56,17 @@
 
 
                     <p:layoutUnit position="center">
-                        <h:panelGrid columns="4" cellpadding="5">
+                        <h:panelGrid columns="5" cellpadding="5">
                             <h:outputText value="Categoria:" />
-                            <p:selectOneMenu value="#{controlMB.filter}" converter="filterConverter">
-                                <f:selectItem itemLabel="Selecciona una categoría" itemValue=""/>
-                                <f:selectItems value="#{controlMB.filters}" var="filter" itemLabel="#{filter.filterdesc}" itemValue="#{filter}" />
+                            <p:selectOneMenu value="#{controlMB.filter}">
                                 <f:ajax listener="#{controlMB.buscar}" render="display growl" />
+                                <f:selectItem itemLabel="Selecciona una categoría" itemValue=""/>
+                                <f:selectItems value="#{controlMB.filters}" 
+                                               var="fil" 
+                                               itemLabel="#{fil.filterdesc}" 
+                                               itemValue="#{fil.filterkey}" />
                             </p:selectOneMenu>
-
+                            
                             <p:commandButton value="Todos" update="display growl" actionListener="#{controlMB.marcarTodos}" />
 
                             <p:commandButton value="Ninguno" update="display growl" actionListener="#{controlMB.desMarcarTodos}" />

@@ -5,11 +5,13 @@
  */
 package es.bestbikes.bean;
 
+import java.io.Serializable;
+
 /**
  *
  * @author jorge
  */
-public class PeticionBean {
+public class PeticionBean implements Serializable {
     
     private String url;
     

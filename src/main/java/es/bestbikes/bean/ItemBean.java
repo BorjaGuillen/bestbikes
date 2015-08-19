@@ -6,12 +6,13 @@
 package es.bestbikes.bean;
 
 import es.bestbikes.jaxb.Item;
+import java.io.Serializable;
 
 /**
  *
  * @author jorge
  */
-public class ItemBean extends Item{
+public class ItemBean extends Item implements Serializable {
     
     private boolean cargar;
 

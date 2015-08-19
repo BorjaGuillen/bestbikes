@@ -92,20 +92,23 @@ public class PeticionSrv {
             URL url = new URL(urlstring);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
-            conn.setRequestProperty("Accept", "application/xml");
-
+            //conn.setRequestProperty("Content-Type","text/xml; charset=ISO-8859-1");
+            //conn.setRequestProperty("Accept-Charset", "UTF-8");
+            conn.setRequestProperty("Accept-Charset", "ISO-8859-1");
+            
             if (conn.getResponseCode() != 200) {
                 throw new RuntimeException("Failed : HTTP error code : "
                         + conn.getResponseCode());
             }
 
-            BufferedReader br = new BufferedReader(new InputStreamReader(
-                    (conn.getInputStream())));
-
+            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "ISO-8859-1"));
+            //BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+            
             String output;
             salida = "";
             while ((output = br.readLine()) != null) {
                 salida += output;
+                System.out.println(output);
             }
 
             conn.disconnect();
@@ -122,13 +125,14 @@ public class PeticionSrv {
         return salida;
     }
 
-    public List<ItemBean> buscarItems() {
+    public List<ItemBean> buscarItems(String categoria) {
         PeticionBean p = new PeticionBean();
         p.setUrl(Config.getInstance().get("b2b.url"));
         p.setLoginid(Config.getInstance().get("b2b.loginid"));
         p.setPassword(Config.getInstance().get("b2b.password"));
         p.setProcesstype(Config.getInstance().get("b2b.processtype"));
-        p.setCategory(Config.getInstance().get("b2b.category"));
+        //p.setCategory(Config.getInstance().get("b2b.category"));
+        p.setCategory(categoria);
         p.setPagesize(Config.getInstance().get("b2b.pagesize"));
         p.setPage(Config.getInstance().get("b2b.page"));
         
