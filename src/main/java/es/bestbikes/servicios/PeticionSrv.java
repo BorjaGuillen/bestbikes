@@ -14,6 +14,7 @@ import es.bestbikes.jaxb.Root;
 import es.bestbikes.types.TypeJaxb;
 import es.bestbikes.util.Config;
 import es.bestbikes.util.JaxbUtil;
+import es.bestbikes.util.Trazas;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -88,7 +89,9 @@ public class PeticionSrv {
             if (peticion.getSearchpattern() != null) {
                 urlstring += "&searchpattern=*";            
             }
-
+            
+            Trazas.trazar(urlstring);
+            
             URL url = new URL(urlstring);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
@@ -108,7 +111,7 @@ public class PeticionSrv {
             salida = "";
             while ((output = br.readLine()) != null) {
                 salida += output;
-                System.out.println(output);
+                //System.out.println(output);
             }
 
             conn.disconnect();
@@ -162,6 +165,95 @@ public class PeticionSrv {
             next.setCargar(value);
         }
         return items;
+    }
+
+    public  List<ItemBean> obtenerTodosLosItems() {
+        List<ItemBean> lista = new ArrayList<ItemBean>();
+        
+        int nmpagina = 1;
+        int nmpaginas = nmpagina + 1;
+
+        while (nmpagina <= nmpaginas) {
+            PeticionBean p = new PeticionBean();
+            p.setUrl(Config.getInstance().get("b2b.url"));
+            p.setLoginid(Config.getInstance().get("b2b.loginid"));
+            p.setPassword(Config.getInstance().get("b2b.password"));
+            p.setProcesstype(Config.getInstance().get("b2b.processtype"));
+            //p.setCategory(Config.getInstance().get("b2b.category"));
+            //p.setCategory(categoria);
+            p.setPagesize(Config.getInstance().get("b2b.pagesize"));
+            p.setPage(nmpagina + "");
+
+            String salida = srv.buscar(p);
+
+            Root xml = (Root) JaxbUtil.unmarshall(salida, TypeJaxb.BEST_BIKES);
+            if (xml != null) {
+                nmpaginas = xml.getOfpages().intValue();
+                List<Item> items = xml.getItem();
+
+
+                for (Iterator<Item> iterator = items.iterator(); iterator.hasNext();) {
+                    Item next = iterator.next();
+                    lista.add(new ItemBean(next));
+                }
+                nmpagina++;
+            }
+        }
+        return lista;    
+    }
+
+    
+    public int obtenerTodosLosItemsNumpag() {
+        int nmpaginas = 0;
+        Root xml = null;
+
+        while (xml == null) {
+            PeticionBean p = new PeticionBean();
+            p.setUrl(Config.getInstance().get("b2b.url"));
+            p.setLoginid(Config.getInstance().get("b2b.loginid"));
+            p.setPassword(Config.getInstance().get("b2b.password"));
+            p.setProcesstype(Config.getInstance().get("b2b.processtype"));
+            p.setPagesize(Config.getInstance().get("b2b.pagesize"));
+            p.setPage("1");
+
+            String salida = srv.buscar(p);
+
+            xml = (Root) JaxbUtil.unmarshall(salida, TypeJaxb.BEST_BIKES);
+            if (xml != null) {
+                nmpaginas = xml.getOfpages().intValue();
+            }
+        }
+        return nmpaginas;    
+    }
+    
+    public  List<ItemBean> obtenerTodosLosItems(int nmpagina) {
+        List<ItemBean> lista = new ArrayList<ItemBean>();
+        
+        Root xml = null;
+
+        while (xml == null) {
+            PeticionBean p = new PeticionBean();
+            p.setUrl(Config.getInstance().get("b2b.url"));
+            p.setLoginid(Config.getInstance().get("b2b.loginid"));
+            p.setPassword(Config.getInstance().get("b2b.password"));
+            p.setProcesstype(Config.getInstance().get("b2b.processtype"));
+            //p.setCategory(Config.getInstance().get("b2b.category"));
+            //p.setCategory(categoria);
+            p.setPagesize(Config.getInstance().get("b2b.pagesize"));
+            p.setPage(nmpagina + "");
+
+            String salida = srv.buscar(p);
+
+            xml = (Root) JaxbUtil.unmarshall(salida, TypeJaxb.BEST_BIKES);
+            if (xml != null) {
+                List<Item> items = xml.getItem();
+                for (Iterator<Item> iterator = items.iterator(); iterator.hasNext();) {
+                    Item next = iterator.next();
+                    lista.add(new ItemBean(next));
+                }
+            }
+        }
+        return lista;    
     }
 
 }

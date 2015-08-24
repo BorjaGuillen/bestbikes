@@ -32,6 +32,7 @@ public class JaxbUtil {
             salida = jaxbUnmarshaller.unmarshal(stream);
 
         } catch (JAXBException e) {
+            Trazas.trazarError(e.getMessage());
             e.printStackTrace();
         }
         return salida;
