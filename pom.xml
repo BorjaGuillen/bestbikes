@@ -124,13 +124,14 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>jaxb2-maven-plugin</artifactId>
-                <executions>
+               <!-- <executions>
                     <execution>
                         <goals>
                             <goal>xjc</goal>
                         </goals>
                     </execution>
                 </executions>
+                -->
                 <configuration>
                     
                     <!-- The schema directory or xsd files. -->
