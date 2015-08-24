@@ -10,14 +10,16 @@ package es.bestbikes.exception;
  * @author isthar
  */
 public class ProductoExistente extends Exception {
+    /**
+     * Indicamos la referencia del producto que esta provocando el error
+     * @param refProducto 
+     */
+    public ProductoExistente(String refProducto){
+        super("El producto que se intenta cargar en el sistema como nuevo ref="+refProducto+" , ya existe en prestashop, intentad utilizar para este producto el método de acutalización");
+    }
     
-    private ProductoExistente() {
+    public ProductoExistente() {
         super("El producto que se intenta cargar en el sistema como nuevo, ya existe en prestashop, intentad utilizar para este producto el método de acutalización");
     }
     
-    public ProductoExistente(String mensaje) {
-        
-        super(mensaje);
-    }
- 
 }

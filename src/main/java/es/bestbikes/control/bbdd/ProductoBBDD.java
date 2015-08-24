@@ -7,12 +7,15 @@ package es.bestbikes.control.bbdd;
 
 import es.bestbikes.bean.ItemBean;
 import es.bestbikes.exception.ControlBbddException;
+import es.bestbikes.exception.ProductoExistente;
+import es.bestbikes.exception.ReferenciaProductoRepetida;
 import es.bestbikes.jpa.PsProduct;
 import es.bestbikes.util.Trazas;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 /**
  *
@@ -32,13 +35,43 @@ public class ProductoBBDD extends ControlBBDD{
         }
         return bbdd;
     }
-    
-    
-     public Integer insertarProductoNuevo(ItemBean productoNuevo)  throws ControlBbddException  {
+    /**
+     * Nos devuelve un ItemBean que contenga la referencia del proveedor que estamos buscando
+     * @param referencia del proveerdor
+     * @throws ReferenciaProductoRepetida en caso de que tengamos varios elementos con la misma referencia
+     * @return ItemBean
+     */
+    public List<ItemBean> buscarProductos(String referencia) throws ReferenciaProductoRepetida{
         
-        try {
+        String sql ="SELECT p FROM PsProduct p WHERE p.supplierReference ="+referencia;
+        Query q = getEntityManager().createQuery(sql);
+        List<PsProduct> listaJpaq=q.getResultList();
+        
+        return null;
+    }
+    
+    /**
+     * <p>Metodo para insertar un producto nuevo, es decir que no existía previamente en el sistema de prestashop</p>
+     * @param ItemBean que queremos cargar en prestashop
+     * @throws ProductoExistente en caso de que el producto ya existiese en prestashop
+     * @throws ControlBbddException en caso de no poder realizar la inserción en la BD por algún problema fuera del modelo de negocio.
+     *  
+    */
+     private Integer insertarProductoNuevo(ItemBean productoNuevo)  throws ControlBbddException,ProductoExistente  {
+                
+         try {
+            /*
+            Comprobamos si el producto es nuevo buscandolo en supplier_reference
+            */
+            if (buscarProductos(productoNuevo.getSupplieritemnumber())!=null) 
+                throw new ProductoExistente(productoNuevo.getSupplieritemnumber());    
+            
+            // En caso de no encontrarlo podemos dar de alta el nuevo elemento
+            
             EntityManager em = getEntityManager();
             PsProduct producto= new PsProduct();
+            
+            
             
             producto.setDateAdd(Calendar.getInstance().getTime());
             producto.setDateUpd(null); 
@@ -50,16 +83,27 @@ public class ProductoBBDD extends ControlBBDD{
             producto.setAvailableDate(null);
             producto.setAvailableForOrder(true);
             producto.setCacheDefaultAttribute(Integer.MIN_VALUE);
-            producto.setCacheHasAttachments(true);
-            producto.setCacheIsPack(true);
-            producto.setCondition(null);
+            producto.setCacheHasAttachments(false);
+            producto.setCacheIsPack(false);
+            producto.setCondition("new");
             producto.setCustomizable(Short.MIN_VALUE);
             producto.setDepth(BigDecimal.ZERO);
             producto.setEan13(null);
             producto.setEcotax(BigDecimal.ZERO);
             producto.setHeight(BigDecimal.ZERO);
+            
+            /*Tendremos que asociar los códigos de catergoria que nos aporta el servicio web productoNuevo.getCategorykey();
+             a los códigos de los que disponemos en prestaShopen (ps_category ps_category_lang). Una vez asociados asignaremos 
+             el id correspondiente al IdCategoryDefault, en caso de no encontrarlo no cargamos al producto dando un error de 
+             no existe la categoría xxx del producto a cargar.
+            
+            */
             producto.setIdCategoryDefault(Integer.MIN_VALUE);
             
+            /*
+              Calculamos quien es el fabricante, lo buscamos en la tabla de ps_manufacturer y lo asociamos.
+              En caso de no exitir damos de alta el nuevo fabricante y asociamos su id al presente producto
+            */
             producto.setIdManufacturer(Integer.MIN_VALUE);
             
             producto.setIdProductRedirected(0);
@@ -70,14 +114,14 @@ public class ProductoBBDD extends ControlBBDD{
             producto.setIndexed(true);
             producto.setIsVirtual(true);
             producto.setLocation(null);
-            producto.setMinimalQuantity(0);
+            producto.setMinimalQuantity(1);
             producto.setOnSale(false);
-            producto.setOutOfStock(0);
+            producto.setOutOfStock(2);
             producto.setPackStockType(0);
             producto.setPrice(productoNuevo.getPrecioNuevo());
             producto.setQuantity(0);
-            producto.setQuantityDiscount(Boolean.TRUE);
-            producto.setRedirectType(null);
+            producto.setQuantityDiscount(Boolean.FALSE);
+            producto.setRedirectType("404");
             producto.setReference(null);
             producto.setShowPrice(false);
             producto.setSupplierReference(null);
@@ -86,13 +130,24 @@ public class ProductoBBDD extends ControlBBDD{
             producto.setUnity(null);
             producto.setUpc(null);
             producto.setUploadableFiles(Short.MIN_VALUE);
-            producto.setVisibility(null);
+            producto.setVisibility("both");
             producto.setWeight(BigDecimal.ZERO);
             producto.setWholesalePrice(BigDecimal.ZERO);
             producto.setWidth(BigDecimal.ZERO);
             
             
-        } catch (Exception e) {
+        } 
+         
+         catch (ProductoExistente e){
+             Trazas.trazarWarning(e.getMessage());
+                     
+         }
+         
+         catch(ReferenciaProductoRepetida e){
+         
+         }
+         
+         catch (Exception e) {
             Trazas.trazarError(e.getMessage());
             throw new  ControlBbddException ("error al insertar un producto en BD"+productoNuevo.toString());
         }
@@ -103,13 +158,25 @@ public class ProductoBBDD extends ControlBBDD{
      
     public Integer insertarListaProductos(List<ItemBean> listaProductos) throws ControlBbddException  {
         
+        Integer errores=0;
         
         for (ItemBean productoNuevo : listaProductos){
-            insertarProductoNuevo(productoNuevo);        
+            try{
+                insertarProductoNuevo(productoNuevo);        
+            } 
+            
+            catch (ProductoExistente ex) {
+                Trazas.trazarWarning("error al insertar un producto en BD"+ex.toString());
+                errores++;
+            }
+            
+            catch (Exception e) {
+            Trazas.trazarError(e.getMessage());
+            errores++;
+            }
         }
-        
-        
-    
+        if (errores==listaProductos.size()) throw new  ControlBbddException ("No se han podido insertar ninguno de los productos.");
+     
     return 1;
     }
     
