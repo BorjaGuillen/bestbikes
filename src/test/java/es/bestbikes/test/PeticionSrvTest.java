@@ -5,12 +5,16 @@
  */
 package es.bestbikes.test;
 
+import es.bestbikes.bean.ItemBean;
 import es.bestbikes.bean.PeticionBean;
 import es.bestbikes.jaxb.Root;
+import es.bestbikes.servicios.MultiPeticionSrv;
 import es.bestbikes.servicios.PeticionSrv;
 import es.bestbikes.types.TypeJaxb;
 import es.bestbikes.util.Config;
 import es.bestbikes.util.JaxbUtil;
+import java.util.List;
+import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -22,6 +26,7 @@ import org.junit.Test;
 public class PeticionSrvTest {
     
     @Test
+    @Ignore
     public void buscar() {
         PeticionSrv srv = PeticionSrv.getInstance();
         
@@ -41,5 +46,19 @@ public class PeticionSrvTest {
         System.out.println(xml.getGUID());
     }
     
+    
+    @Test
+    @Ignore
+    public void pedirTodo() {
+        PeticionSrv srv = PeticionSrv.getInstance();
+        List<ItemBean> salida = srv.obtenerTodosLosItems();
+        System.out.println("He obtenido " + salida.size() + " items");
+    }
+    
+    @Test
+    public void actualizarTodo() {
+        MultiPeticionSrv srv = MultiPeticionSrv.getInstance();
+        srv.actualizarTodosLosItems();
+    }
     
 }
