@@ -132,7 +132,7 @@
                 <version>3.2.1</version>
                 <configuration>
                     <driver>com.mysql.jdbc.Driver</driver>
-                    <url>jdbc:mysql://localhost:3306/prueba_flyway?zeroDateTimeBehavior=convertToNull</url>
+                    <url>jdbc:mysql://localhost:3306/bestbike_bd?zeroDateTimeBehavior=convertToNull</url>
                     <user>root</user>
                     <password>141421356.</password>
                 </configuration>
