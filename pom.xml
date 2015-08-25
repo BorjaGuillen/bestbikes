@@ -70,6 +70,11 @@
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.17</version>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.36</version>
         </dependency>         
     </dependencies>
 
@@ -122,6 +127,18 @@
             </plugin>
             
             <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>3.2.1</version>
+                <configuration>
+                    <driver>com.mysql.jdbc.Driver</driver>
+                    <url>jdbc:mysql://localhost:3306/prueba_flyway?zeroDateTimeBehavior=convertToNull</url>
+                    <user>root</user>
+                    <password>141421356.</password>
+                </configuration>
+            </plugin>
+            
+            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>jaxb2-maven-plugin</artifactId>
                <!-- <executions>
@@ -141,6 +158,12 @@
                     <!-- The working directory to create the generated java source files. -->
                     <outputDirectory>${basedir}/src/main/java</outputDirectory>
                     <clearOutputDir>false</clearOutputDir>
+                    
+                    <!-- configuración del flyway-->
+                    
+                    
+                    
+                    
                 </configuration>
             </plugin>
             
