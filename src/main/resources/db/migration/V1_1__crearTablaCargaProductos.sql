@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `cargaProductos2` (
+CREATE TABLE `cargaProductos` (
   `number` varchar(200) NOT NULL,
   `unitprice` decimal(20,6) unsigned NOT NULL,
   `scaledunitprice` decimal(20,6) NOT NULL,
@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS `cargaProductos2` (
   `supplier` varchar(200) NOT NULL,
   `categorykey` varchar(200) NOT NULL,
   `infourl` varchar(200) NOT NULL,
-  `pictureurl` varchar(200) NOT NULL
-
+  `pictureurl` varchar(200) NOT NULL,
+  `cargado` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`number`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
