@@ -188,5 +188,20 @@ public class ProductoBBDD extends ControlBBDD{
         List<String> salida = query.getResultList();
         return salida;
     }
+
+    public void insertar(CargaProductos pro) {
+        EntityManager em = getEntityManager(); 
+        em.getTransaction().begin();
+        em.persist(pro);
+        em.getTransaction().commit();
+    }
     
+    public void borrarTablaTemporal() {
+        EntityManager em = getEntityManager(); 
+        em.getTransaction().begin();
+        em.createQuery("DELETE FROM CargaProductos").executeUpdate();
+        em.getTransaction().commit();
+    }
+
+
 }

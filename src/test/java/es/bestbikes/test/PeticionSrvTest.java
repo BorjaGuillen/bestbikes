@@ -7,12 +7,16 @@ package es.bestbikes.test;
 
 import es.bestbikes.bean.ItemBean;
 import es.bestbikes.bean.PeticionBean;
+import es.bestbikes.control.bbdd.ProductoBBDD;
 import es.bestbikes.jaxb.Root;
+import es.bestbikes.jpa.CargaProductos;
 import es.bestbikes.servicios.MultiPeticionSrv;
 import es.bestbikes.servicios.PeticionSrv;
 import es.bestbikes.types.TypeJaxb;
 import es.bestbikes.util.Config;
 import es.bestbikes.util.JaxbUtil;
+import es.bestbikes.wrapper.WrapperItem;
+import java.util.Iterator;
 import java.util.List;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -56,9 +60,23 @@ public class PeticionSrvTest {
     }
     
     @Test
+    @Ignore
     public void actualizarTodo() {
         MultiPeticionSrv srv = MultiPeticionSrv.getInstance();
         srv.actualizarTodosLosItems();
+    }
+    
+    @Test
+    @Ignore
+    public void probarTripasRobot() {
+            PeticionSrv srv = PeticionSrv.getInstance();
+            ProductoBBDD.getInstancia().borrarTablaTemporal();
+            List<ItemBean> salida = srv.obtenerTodosLosItems(1);
+            for (Iterator<ItemBean> iterator = salida.iterator(); iterator.hasNext();) {
+                ItemBean next = iterator.next();
+                CargaProductos pro = WrapperItem.toLocal(next);
+                ProductoBBDD.getInstancia().insertar(pro);
+            }
     }
     
 }
