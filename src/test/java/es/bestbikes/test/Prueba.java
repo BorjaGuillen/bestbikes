@@ -5,19 +5,19 @@
  */
 package es.bestbikes.test;
 
+import es.bestbikes.util.Nvl;
+import es.bestbikes.util.Trazas;
+import java.math.BigInteger;
+import org.junit.Test;
+
 /**
  *
  * @author jorge
  */
 public class Prueba {
 
-    public static void main(String[] args) {
-        String dato = "<filter>\n"
-                + "<filterkey>BATTERIEBE</filterkey>\n"
-                + "<filtercount>366</filtercount>\n"
-                + "<filterdesc>Luces con batería</filterdesc>\n"
-                + "</filter>";
-        
-        
+    @Test
+    public void pruebaNvl(){
+        Trazas.trazar(Nvl.toString(new BigInteger("123456")));
     }
 }

@@ -52,33 +52,31 @@
                         </div>
                     </p:layoutUnit>
 
-                    <p:layoutUnit position="south" size="100" closable="true" collapsible="true">
-                        <div style="width: 400px; margin: 0 auto;">
-                            <h:panelGrid columns="2">
-                                <h:panelGrid columns="1" style="margin-bottom: 10px">
-                                    <h:outputText id="output" value="Porcentaje precio a %#{controlMB.porcentaje}" />
-                                    <h:inputHidden id="txt2" value="#{controlMB.porcentaje}" />
-                                    <p:slider for="txt2" display="output" style="width: 200px" displayTemplate="Porcentaje precio a %{value}" />
-                                </h:panelGrid>
-
-                                <p:commandButton value="Cargar" update="display growl" actionListener="#{controlMB.cargar}" />
-                            </h:panelGrid>
-                        </div>
-                    </p:layoutUnit>
-
 
                     <p:layoutUnit position="center">
                         <h:panelGrid columns="5" cellpadding="5">
+                            <!--
                             <h:outputText value="Categoria:" />
+                            <p:selectOneMenu value="# {controlMB.filter}">
+                                <f:ajax listener="# {controlMB.buscar}" render="display growl" />
+                                <f:selectItem itemLabel="Selecciona una categoría" itemValue=""/>
+                                <f:selectItems value="# {controlMB.filters}" 
+                                               var="fil" 
+                                               itemLabel="# {fil.filterdesc} (# {fil.filtercount})" 
+                                               itemValue="# {fil.filterkey}" />
+                            </p:selectOneMenu>
+                            -->
+                            <h:outputText value="Marca:" />
                             <p:selectOneMenu value="#{controlMB.filter}">
                                 <f:ajax listener="#{controlMB.buscar}" render="display growl" />
-                                <f:selectItem itemLabel="Selecciona una categoría" itemValue=""/>
-                                <f:selectItems value="#{controlMB.filters}" 
+                                <f:selectItem itemLabel="Selecciona una marca" itemValue=""/>
+                                <f:selectItems value="#{controlMB.marcas}" 
                                                var="fil" 
-                                               itemLabel="#{fil.filterdesc} (#{fil.filtercount})" 
-                                               itemValue="#{fil.filterkey}" />
+                                               itemLabel="#{fil}" 
+                                               itemValue="#{fil}" />
                             </p:selectOneMenu>
-                            
+
+
                             <p:commandButton value="Todos" update="display growl" actionListener="#{controlMB.marcarTodos}" />
 
                             <p:commandButton value="Ninguno" update="display growl" actionListener="#{controlMB.desMarcarTodos}" />
@@ -120,6 +118,26 @@
                         </p:dataTable>
                     </p:layoutUnit>
 
+                    
+                    
+                    <p:layoutUnit position="south" size="100" closable="true" collapsible="true">
+                        <div style="width: 400px; margin: 0 auto;">
+                            <h:panelGrid columns="5">
+                                <p:commandButton value="ACTUALIZAR DATOS"     update="display growl" actionListener="#{controlMB.actualizarDatos}" style="width:150px;height:50px"/>
+
+                                <h:panelGrid columns="1" style="margin-bottom: 10px">
+                                    <h:outputText id="output" value="Incremento en %#{controlMB.porcentaje}" />
+                                    <h:inputHidden id="txt2" value="#{controlMB.porcentaje}" />
+                                    <p:slider for="txt2" display="output" style="width: 200px" displayTemplate="Incremento en %{value}" minValue="-100" maxValue="100" />
+                                </h:panelGrid>
+
+                                <p:commandButton value="Cargar en base a PVP"     update="display growl" actionListener="#{controlMB.cargar}" style="width:150px;height:50px"/>
+
+                                <p:commandButton value="Cargar en base a P.Coste" update="display growl" actionListener="#{controlMB.cargar}" style="width:150px;height:50px"/>
+                            </h:panelGrid>
+                        </div>
+                    </p:layoutUnit>
+                    
                 </p:layout>
             </h:form>
 
