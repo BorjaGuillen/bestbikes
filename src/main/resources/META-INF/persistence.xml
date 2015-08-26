@@ -13,7 +13,7 @@
     <class>es.bestbikes.jpa.PsProductAttributeImage</class>
     <class>es.bestbikes.jpa.PsImage</class>
     <class>es.bestbikes.jpa.PsImageLang</class>
-    <class>es.bestbikes.jpa.CargaProductos</class>
+    <class>es.bestbikes.bean.CargaProductos</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/bestbike_bd?zeroDateTimeBehavior=convertToNull"/>

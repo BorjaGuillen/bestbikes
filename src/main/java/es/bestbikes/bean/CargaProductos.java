@@ -3,10 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package es.bestbikes.jpa;
+package es.bestbikes.bean;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,6 +15,8 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -44,7 +47,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "CargaProductos.findByCategorykey", query = "SELECT c FROM CargaProductos c WHERE c.categorykey = :categorykey"),
     @NamedQuery(name = "CargaProductos.findByInfourl", query = "SELECT c FROM CargaProductos c WHERE c.infourl = :infourl"),
     @NamedQuery(name = "CargaProductos.findByPictureurl", query = "SELECT c FROM CargaProductos c WHERE c.pictureurl = :pictureurl"),
-    @NamedQuery(name = "CargaProductos.findByCargado", query = "SELECT c FROM CargaProductos c WHERE c.cargado = :cargado")})
+    @NamedQuery(name = "CargaProductos.findByCargar", query = "SELECT c FROM CargaProductos c WHERE c.cargar = :cargar"),
+    @NamedQuery(name = "CargaProductos.findByFccarga", query = "SELECT c FROM CargaProductos c WHERE c.fccarga = :fccarga")})
 public class CargaProductos implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -129,8 +133,11 @@ public class CargaProductos implements Serializable {
     @Size(min = 1, max = 200)
     @Column(name = "pictureurl")
     private String pictureurl;
-    @Column(name = "cargado")
-    private Boolean cargado;
+    @Column(name = "cargar")
+    private Boolean cargar;
+    @Column(name = "Fc_carga")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fccarga;
 
     public CargaProductos() {
     }
@@ -295,12 +302,20 @@ public class CargaProductos implements Serializable {
         this.pictureurl = pictureurl;
     }
 
-    public Boolean getCargado() {
-        return cargado;
+    public Boolean getCargar() {
+        return cargar;
     }
 
-    public void setCargado(Boolean cargado) {
-        this.cargado = cargado;
+    public void setCargar(Boolean cargar) {
+        this.cargar = cargar;
+    }
+
+    public Date getFccarga() {
+        return fccarga;
+    }
+
+    public void setFccarga(Date fccarga) {
+        this.fccarga = fccarga;
     }
 
     @Override
