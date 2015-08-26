@@ -8,6 +8,8 @@ package es.bestbikes.mb;
 import es.bestbikes.bean.FilterBean;
 import es.bestbikes.bean.ItemBean;
 import es.bestbikes.bean.PeticionBean;
+import es.bestbikes.control.bbdd.ProductoBBDD;
+import es.bestbikes.servicios.MultiPeticionSrv;
 import es.bestbikes.servicios.PeticionSrv;
 import java.io.Serializable;
 import java.util.Iterator;
@@ -36,6 +38,12 @@ public class ControlMB implements Serializable {
     
     private PeticionSrv srv = PeticionSrv.getInstance();
     
+    private  List<String> marcas;
+
+    public void setMarcas(List<String> marcas) {
+        this.marcas = marcas;
+    }
+    
     private int porcentaje;
 
     @PostConstruct
@@ -43,6 +51,7 @@ public class ControlMB implements Serializable {
         srv = PeticionSrv.getInstance();
         filters = srv.buscarCategorias();
         porcentaje = 15;
+        marcas = ProductoBBDD.getInstancia().listaMarcas();
     }
 
     public PeticionBean getPeticion() {
@@ -93,6 +102,11 @@ public class ControlMB implements Serializable {
         }
     }
     
+    public void actualizarDatos() {
+        MultiPeticionSrv srv = MultiPeticionSrv.getInstance();
+        srv.actualizarTodosLosItems();
+    }
+    
     
     public void marcarTodos() {
         items = srv.marcarTodos(items, true);
@@ -122,4 +136,10 @@ public class ControlMB implements Serializable {
         this.porcentaje = porcentaje;
     }
     
+    public List<String> getMarcas() {
+        return marcas;
+    }
+
+
 }
+

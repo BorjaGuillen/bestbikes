@@ -134,39 +134,28 @@
                     <driver>com.mysql.jdbc.Driver</driver>
                     <url>jdbc:mysql://localhost:3306/bestbike_bd?zeroDateTimeBehavior=convertToNull</url>
                     <user>root</user>
-                    <password>141421356.</password>
+                    <password>123456</password>
                 </configuration>
             </plugin>
-            
+            <!--
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>jaxb2-maven-plugin</artifactId>
-               <!-- <executions>
+                <executions>
                     <execution>
                         <goals>
                             <goal>xjc</goal>
                         </goals>
                     </execution>
                 </executions>
-                -->
                 <configuration>
-                    
-                    <!-- The schema directory or xsd files. -->
                     <schemaDirectory>${basedir}/src/main/resources/</schemaDirectory>
-                    <!-- The package in which the source files will be generated. -->
                     <packageName>es.bestbikes.jaxb</packageName>
-                    <!-- The working directory to create the generated java source files. -->
                     <outputDirectory>${basedir}/src/main/java</outputDirectory>
                     <clearOutputDir>false</clearOutputDir>
-                    
-                    <!-- configuración del flyway-->
-                    
-                    
-                    
-                    
                 </configuration>
             </plugin>
-            
+            -->
         </plugins>
     </build>
     <repositories>

@@ -9,6 +9,7 @@ import es.bestbikes.bean.ItemBean;
 import es.bestbikes.exception.ControlBbddException;
 import es.bestbikes.exception.ProductoExistente;
 import es.bestbikes.exception.ReferenciaProductoRepetida;
+import es.bestbikes.jpa.CargaProductos;
 import es.bestbikes.jpa.PsProduct;
 import es.bestbikes.util.Trazas;
 import java.math.BigDecimal;
@@ -176,9 +177,16 @@ public class ProductoBBDD extends ControlBBDD{
             }
         }
         if (errores==listaProductos.size()) throw new  ControlBbddException ("No se han podido insertar ninguno de los productos.");
-     
+    
     return 1;
     }
     
+    
+    public List<String> listaMarcas() {
+        EntityManager em = getEntityManager();
+        Query query = em.createNativeQuery("SELECT distinct c.supplier FROM cargaProductos c");
+        List<String> salida = query.getResultList();
+        return salida;
+    }
     
 }

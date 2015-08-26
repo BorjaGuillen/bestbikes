@@ -6,8 +6,10 @@
 package es.bestbikes.util;
 
 import es.bestbikes.bean.ItemBean;
+import es.bestbikes.jpa.CargaProductos;
 import es.bestbikes.servicios.MultiPeticionSrv;
 import es.bestbikes.servicios.PeticionSrv;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -31,6 +33,11 @@ public class Robot extends Thread {
         for (int p = pagIni; p < pagFin; p++) {
             PeticionSrv srv = PeticionSrv.getInstance();
             List<ItemBean> salida = srv.obtenerTodosLosItems(p);
+            for (Iterator<ItemBean> iterator = salida.iterator(); iterator.hasNext();) {
+                ItemBean next = iterator.next();
+                CargaProductos pro = new CargaProductos();
+                
+            }
         }
         MultiPeticionSrv.getInstance().eliminarRobot(this);
         Trazas.trazar("ROBOTILLO " + pagIni + " - " + pagFin + "Finalizado");
