@@ -6,6 +6,7 @@
 package es.bestbikes.servicios;
 
 import es.bestbikes.bean.ItemBean;
+import es.bestbikes.control.bbdd.ProductoBBDD;
 import es.bestbikes.util.Robot;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,16 +33,22 @@ public class MultiPeticionSrv {
     }    
     
     public  void actualizarTodosLosItems() {
+        ProductoBBDD.getInstancia().borrarTablaTemporal();
         
         PeticionSrv srv = PeticionSrv.getInstance();
         int nmpag = srv.obtenerTodosLosItemsNumpag();
-        int INC = 10;
+        /*int INC = 10;
         for (int r = 1; r <= nmpag;) {
             Robot robot = new Robot(r, r+INC);
             lista.add(robot);
             robot.start();
             r = r + INC + 1;
-        }
+        }*/
+        
+        Robot robot = new Robot(1, nmpag);
+        lista.add(robot);
+        robot.start();
+
         while (!lista.isEmpty()) {
             esperarXsegundos(1);
         }

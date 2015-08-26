@@ -191,16 +191,29 @@ public class ProductoBBDD extends ControlBBDD{
 
     public void insertar(CargaProductos pro) {
         EntityManager em = getEntityManager(); 
-        em.getTransaction().begin();
-        em.persist(pro);
-        em.getTransaction().commit();
+        try {
+            em.getTransaction().begin();
+            em.persist(pro);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+        }
+
     }
     
     public void borrarTablaTemporal() {
         EntityManager em = getEntityManager(); 
-        em.getTransaction().begin();
-        em.createQuery("DELETE FROM CargaProductos").executeUpdate();
-        em.getTransaction().commit();
+        try {
+            em.getTransaction().begin();
+            em.createQuery("DELETE FROM CargaProductos").executeUpdate();
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+        }
     }
 
 
