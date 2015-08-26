@@ -134,7 +134,7 @@
                     <driver>com.mysql.jdbc.Driver</driver>
                     <url>jdbc:mysql://localhost:3306/bestbike_bd?zeroDateTimeBehavior=convertToNull</url>
                     <user>root</user>
-                    <password>141421356.</password>
+                    <password>123456</password>
                 </configuration>
             </plugin>
             
