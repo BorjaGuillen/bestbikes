@@ -6,9 +6,9 @@
 package es.bestbikes.mb;
 
 import es.bestbikes.bean.FilterBean;
-import es.bestbikes.bean.ItemBean;
 import es.bestbikes.bean.PeticionBean;
 import es.bestbikes.control.bbdd.ProductoBBDD;
+import es.bestbikes.jpa.CargaProductos;
 import es.bestbikes.servicios.MultiPeticionSrv;
 import es.bestbikes.servicios.PeticionSrv;
 import java.io.Serializable;
@@ -32,17 +32,15 @@ public class ControlMB implements Serializable {
     
     private List<FilterBean> filters;
     
-    private String filter;
-
-    private List<ItemBean> items;
+    private List<CargaProductos> items;
     
     private PeticionSrv srv = PeticionSrv.getInstance();
     
+    private String[] selectedMarcas;
+
+    
     private  List<String> marcas;
 
-    public void setMarcas(List<String> marcas) {
-        this.marcas = marcas;
-    }
     
     private int porcentaje;
 
@@ -50,8 +48,9 @@ public class ControlMB implements Serializable {
     public void init() {
         srv = PeticionSrv.getInstance();
         filters = srv.buscarCategorias();
-        porcentaje = 15;
+        porcentaje = -10;
         marcas = ProductoBBDD.getInstancia().listaMarcas();
+        buscar();
     }
 
     public PeticionBean getPeticion() {
@@ -62,11 +61,11 @@ public class ControlMB implements Serializable {
         this.peticion = peticion;
     }
 
-    public List<ItemBean> getItems() {
+    public List<CargaProductos> getItems() {
         return items;
     }
 
-    public void setItems(List<ItemBean> items) {
+    public void setItems(List<CargaProductos> items) {
         this.items = items;
     }
 
@@ -78,27 +77,12 @@ public class ControlMB implements Serializable {
         this.filters = filters;
     }
 
-    public String getFilter() {
-        return filter;
-    }
-
-    public void setFilter(String filter) {
-        this.filter = filter;
-    }
-    
+   
     public void buscar() {
-        if (filter == null || "".equals(filter)) {
-            addMessage("Seleccione una categoría");
+        if (selectedMarcas == null || selectedMarcas.length == 0) {
+            items = ProductoBBDD.getInstancia().buscarItems();
         } else {
-            long numitems = 0;
-            for (Iterator<FilterBean> iterator = filters.iterator(); iterator.hasNext();) {
-                FilterBean next = iterator.next();
-                if (next.getFilterkey().equals(filter)) {
-                    numitems = next.getFiltercount().longValue();
-                }
-            }
-            items = srv.buscarItems(filter, numitems);
-            addMessage("Busqueda realizada (" + filter + ")");
+            items = ProductoBBDD.getInstancia().buscarItems(selectedMarcas);
         }
     }
     
@@ -109,17 +93,29 @@ public class ControlMB implements Serializable {
     
     
     public void marcarTodos() {
-        items = srv.marcarTodos(items, true);
+        for (Iterator<CargaProductos> iterator = items.iterator(); iterator.hasNext();) {
+            CargaProductos next = iterator.next();
+            next.setCargar(true);
+        }
         addMessage("Artículos marcados");
     }
      
     public void desMarcarTodos() {
-        items = srv.marcarTodos(items, false);
+        for (Iterator<CargaProductos> iterator = items.iterator(); iterator.hasNext();) {
+            CargaProductos next = iterator.next();
+            next.setCargar(false);
+        }
         addMessage("Artículos desmarcados");
     }
 
-    public void cargar() {
-        addMessage("Artículos cargados");
+    public void cargarPvp() {
+        boolean actuarPvp = true;
+        ProductoBBDD.getInstancia().cargar(items, this.porcentaje, actuarPvp);
+    }
+
+    public void cargarPC() {
+        boolean actuarPvp = false;
+        ProductoBBDD.getInstancia().cargar(items, this.porcentaje, actuarPvp);
     }
 
     
@@ -140,6 +136,18 @@ public class ControlMB implements Serializable {
         return marcas;
     }
 
+    public String[] getSelectedMarcas() {
+        return selectedMarcas;
+    }
 
+    public void setSelectedMarcas(String[] selectedMarcas) {
+        this.selectedMarcas = selectedMarcas;
+    }
+
+    
+    public void setMarcas(List<String> marcas) {
+        this.marcas = marcas;
+    }
+    
 }
 

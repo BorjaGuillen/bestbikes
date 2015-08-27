@@ -11,6 +11,7 @@ import es.bestbikes.bean.PeticionBean;
 import es.bestbikes.jaxb.Filter;
 import es.bestbikes.jaxb.Item;
 import es.bestbikes.jaxb.Root;
+import es.bestbikes.jpa.CargaProductos;
 import es.bestbikes.types.TypeJaxb;
 import es.bestbikes.util.Config;
 import es.bestbikes.util.JaxbUtil;
@@ -128,6 +129,8 @@ public class PeticionSrv {
         return salida;
     }
 
+
+    
     public List<ItemBean> buscarItems(String categoria, long nmitems) {
         List<ItemBean> lista = new ArrayList<ItemBean>();
         
@@ -255,5 +258,7 @@ public class PeticionSrv {
         }
         return lista;    
     }
+
+
 
 }
