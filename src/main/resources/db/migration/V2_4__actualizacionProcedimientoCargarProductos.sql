@@ -1,24 +1,28 @@
+USE `bestbike_bd`;
+DROP procedure IF EXISTS `cargaProductos`;
+
 DELIMITER $$
+USE `bestbike_bd`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `cargaProductos`(IN incremento decimal(2,2), actuarPVP tinyint(1))
 BEGIN
 
-	DECLARE V_number 			varchar(200) ;
-	DECLARE V_unitprice			decimal(20,6) ;
-	DECLARE V_scaledunitprice		decimal(20,6);
+	DECLARE V_number 					varchar(200) ;
+	DECLARE V_unitprice					decimal(20,6) ;
+	DECLARE V_scaledunitprice			decimal(20,6);
 	DECLARE V_recommendedretailprice	decimal(20,6);
-	DECLARE V_description1			varchar(200);
-	DECLARE V_description2			varchar(200);
-	DECLARE V_availablestatus		tinyint(1);
+	DECLARE V_description1				varchar(200);
+	DECLARE V_description2				varchar(200);
+	DECLARE V_availablestatus			tinyint(1);
 	DECLARE V_availablestatusdesc		varchar(200);
 	DECLARE V_supplieritemnumber		varchar(200);
-	DECLARE V_tax				decimal(17,6);
-	DECLARE V_ean				varchar(13);
-	DECLARE V_manufacturerean		varchar(200);
+	DECLARE V_tax						decimal(17,6);
+	DECLARE V_ean						varchar(13);
+	DECLARE V_manufacturerean			varchar(200);
 	DECLARE V_customstariffnumber		varchar(200);
-	DECLARE V_supplier			varchar(200);
-	DECLARE V_categorykey			varchar(200);
-	DECLARE V_infourl			varchar(200);
-	DECLARE V_pictureurl			varchar(200);
+	DECLARE V_supplier					varchar(200);
+	DECLARE V_categorykey				varchar(200);
+	DECLARE V_infourl					varchar(200);
+	DECLARE V_pictureurl				varchar(200);
 
 	DECLARE finished INTEGER DEFAULT 0;
 
@@ -279,7 +283,7 @@ OPEN ACargar;
 					
 			-- actualizamos la fecha en la que hjemos procesado el elemento a cargado
 					update cargaProductos set fc_carga=now() where number=V_number;
-		
+			-- Cargamos las descripciones
 
 	ELSE -- aux_count El elemento ya existia y vamos a actualizarlo
 
@@ -294,5 +298,8 @@ OPEN ACargar;
  END LOOP get_registro;
  CLOSE ACargar;
 END$$
+
 DELIMITER ;
+
+
 
