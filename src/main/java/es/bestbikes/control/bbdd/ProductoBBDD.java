@@ -13,7 +13,9 @@ import es.bestbikes.jpa.CargaProductos;
 import es.bestbikes.jpa.PsProduct;
 import es.bestbikes.util.Trazas;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -184,7 +186,7 @@ public class ProductoBBDD extends ControlBBDD{
     
     public List<String> listaMarcas() {
         EntityManager em = getEntityManager();
-        Query query = em.createNativeQuery("SELECT distinct c.supplier FROM cargaProductos c");
+        Query query = em.createNativeQuery("SELECT distinct c.supplier FROM cargaProductos c ORDER BY c.supplier");
         List<String> salida = query.getResultList();
         return salida;
     }
@@ -215,6 +217,58 @@ public class ProductoBBDD extends ControlBBDD{
             }
         }
     }
+
+    public void cargar(List<CargaProductos> items, int porcentaje, boolean actuarPvp) {
+        EntityManager em = getEntityManager(); 
+        try {
+            em.getTransaction().begin();
+            for (Iterator<CargaProductos> iterator = items.iterator(); iterator.hasNext();) {
+                CargaProductos next = iterator.next();
+                em.refresh(next);
+            }
+            em.getTransaction().commit();
+            em.getTransaction().begin();
+            Query query = em.createNativeQuery("{ CALL cargaProductos(?, ?) }");  
+            query.setParameter(1, porcentaje);
+            query.setParameter(2, actuarPvp);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().commit();
+                //em.getTransaction().rollback();
+            }
+        }
+        
+    }
+
+    public List<CargaProductos> buscarItems(String[] selectedMarcas) {
+        List<CargaProductos> lista = new ArrayList<CargaProductos>();
+        EntityManager em = getEntityManager(); 
+        try {
+            String par = "'" + selectedMarcas[0] + "'";
+            for (int i = 1; i < selectedMarcas.length; i++) {
+                par += ", '" + selectedMarcas[i] + "'";
+            }
+            
+            Query q = em.createQuery("SELECT c FROM CargaProductos c WHERE c.supplier in (" + par + ")");
+            lista = q.getResultList();
+        } catch (Exception e) {
+            Trazas.trazar(e.getMessage());
+        }
+        return lista;
+    }
+
+    public List<CargaProductos> buscarItems() {
+        List<CargaProductos> lista = new ArrayList<CargaProductos>();
+        EntityManager em = getEntityManager(); 
+        try {
+            Query q = em.createNamedQuery("CargaProductos.findAll");
+            lista = q.getResultList();
+        } catch (Exception e) {
+        }
+        return lista;
+    }
+
 
 
 }

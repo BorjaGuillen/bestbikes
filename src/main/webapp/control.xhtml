@@ -55,27 +55,19 @@
 
                     <p:layoutUnit position="center">
                         <h:panelGrid columns="5" cellpadding="5">
-                            <!--
-                            <h:outputText value="Categoria:" />
-                            <p:selectOneMenu value="# {controlMB.filter}">
-                                <f:ajax listener="# {controlMB.buscar}" render="display growl" />
-                                <f:selectItem itemLabel="Selecciona una categoría" itemValue=""/>
-                                <f:selectItems value="# {controlMB.filters}" 
-                                               var="fil" 
-                                               itemLabel="# {fil.filterdesc} (# {fil.filtercount})" 
-                                               itemValue="# {fil.filterkey}" />
-                            </p:selectOneMenu>
-                            -->
                             <h:outputText value="Marca:" />
-                            <p:selectOneMenu value="#{controlMB.filter}">
-                                <f:ajax listener="#{controlMB.buscar}" render="display growl" />
-                                <f:selectItem itemLabel="Selecciona una marca" itemValue=""/>
-                                <f:selectItems value="#{controlMB.marcas}" 
-                                               var="fil" 
-                                               itemLabel="#{fil}" 
-                                               itemValue="#{fil}" />
-                            </p:selectOneMenu>
 
+                            <p:selectCheckboxMenu id="menu" 
+                                                    value="#{controlMB.selectedMarcas}" 
+                                                    label="Marcas"
+                                                    filter="true" 
+                                                    filterMatchMode="startsWith" 
+                                                    panelStyle="width:350px">
+                                <f:ajax listener="#{controlMB.buscar}" render="display growl" />
+                                <f:selectItems value="#{controlMB.marcas}" />
+                            </p:selectCheckboxMenu>
+ 
+                            <h:outputText value="Cargar:" />
 
                             <p:commandButton value="Todos" update="display growl" actionListener="#{controlMB.marcarTodos}" />
 
@@ -91,27 +83,31 @@
                                      currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} resultados"
                                      style="margin-bottom:20px"                                     
                                      >
-                            <p:column headerText="Numero">
+                            <p:column headerText="Numero" width="75">
                                 <h:outputText value="#{item.number}" />
                             </p:column>
 
-                            <p:column headerText="Categoria">
-                                <h:outputText value="#{item.categorykey}" />
-                            </p:column>
-
-                            <p:column headerText="Descripción">
+                            <p:column headerText="Descripción" width="400">
                                 <h:outputText value="#{item.description1}" />
                             </p:column>
 
-                            <p:column headerText="Disp.">
+                            <p:column headerText="Disp." width="300">
                                 <h:outputText value="#{item.availablestatusdesc}" />
                             </p:column>
 
-                            <p:column headerText="Precio">
-                                <h:outputText value="#{item.unitprice}" />
+                            <p:column headerText="Precio PVP">
+                                <h:outputText value="#{item.recommendedretailprice}"  style="float: right;">
+                                    <f:convertNumber type="currency" currencyCode="EUR" />
+                                </h:outputText>
                             </p:column>
 
-                            <p:column headerText="Cargar">
+                            <p:column headerText="Precio Coste">
+                                <h:outputText value="#{item.unitprice}"  style="float: right;">
+                                    <f:convertNumber type="currency" currencyCode="EUR" />
+                                </h:outputText>
+                            </p:column>
+
+                            <p:column headerText="Cargar" width="50">
                                 <p:selectBooleanButton id="value1" value="#{item.cargar}" onLabel="Si" offLabel="No" style="width:60px" />
                             </p:column>
 
@@ -121,24 +117,33 @@
                     
                     
                     <p:layoutUnit position="south" size="100" closable="true" collapsible="true">
-                        <div style="width: 400px; margin: 0 auto;">
-                            <h:panelGrid columns="5">
-                                <p:commandButton value="ACTUALIZAR DATOS"     update="display growl" actionListener="#{controlMB.actualizarDatos}" style="width:150px;height:50px"/>
+                        <h:panelGrid columns="6">
+                            <p:commandButton value="ACTUALIZAR DATOS"     update="display growl" actionListener="#{controlMB.actualizarDatos}" style="width:150px;height:50px">
+                                <p:confirm header="Confirmación" message="Vas a realizar una carga que va tardar varios minutos. ¿Desea proceder con la carga?" icon="ui-icon-alert" />
+                            </p:commandButton>
 
-                                <h:panelGrid columns="1" style="margin-bottom: 10px">
-                                    <h:outputText id="output" value="Incremento en %#{controlMB.porcentaje}" />
-                                    <h:inputHidden id="txt2" value="#{controlMB.porcentaje}" />
-                                    <p:slider for="txt2" display="output" style="width: 200px" displayTemplate="Incremento en %{value}" minValue="-100" maxValue="100" />
-                                </h:panelGrid>
-
-                                <p:commandButton value="Cargar en base a PVP"     update="display growl" actionListener="#{controlMB.cargar}" style="width:150px;height:50px"/>
-
-                                <p:commandButton value="Cargar en base a P.Coste" update="display growl" actionListener="#{controlMB.cargar}" style="width:150px;height:50px"/>
+                            <h:panelGrid columns="1" style="margin-bottom: 10px">
+                                <h:outputText id="output" value="Incremento en %#{controlMB.porcentaje}" />
+                                <h:inputHidden id="txt2" value="#{controlMB.porcentaje}" />
+                                <p:slider for="txt2" display="output" style="width: 600px" displayTemplate="Incremento en %{value}" minValue="-100" maxValue="100" />
                             </h:panelGrid>
-                        </div>
+
+                            <p:commandButton value="Cargar en base a PVP"     update="display growl" actionListener="#{controlMB.cargarPvp}" style="width:150px;height:50px">
+                                <p:confirm header="Confirmación" message="Vas a realizar una carga en base al PVP. ¿Desea proceder con la carga?" icon="ui-icon-alert" />
+                            </p:commandButton>
+
+                            <p:commandButton value="Cargar en base a P.Coste" update="display growl" actionListener="#{controlMB.cargarPC}"  style="width:150px;height:50px">
+                                <p:confirm header="Confirmación" message="Vas a realizar una carga en base al precio de coste. ¿Desea proceder con la carga?" icon="ui-icon-alert" />
+                            </p:commandButton>
+                        </h:panelGrid>
                     </p:layoutUnit>
                     
                 </p:layout>
+                
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton value="Sí" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:confirmDialog>
             </h:form>
 
         </h:body>
