@@ -53,8 +53,6 @@ BEGIN
 	DECLARE CONTINUE HANDLER
 	 FOR NOT FOUND SET finished = 1; 
 	
-
-
 OPEN ACargar;
 
  get_registro: LOOP
@@ -85,7 +83,20 @@ OPEN ACargar;
 		LEAVE get_registro;
 	 END IF; -- finished = 1 
 	
-	CALL cargarProducto(incremento, actuarPVP,V_number,V_supplier,V_supplieritemnumber,V_categorykey,V_recommendedretailprice,V_unitprice,V_availablestatus);
+	CALL cargarProducto(
+		incremento, 
+		actuarPVP,
+		V_number,
+		V_supplier,
+		V_supplieritemnumber,
+		V_categorykey,
+		V_recommendedretailprice,
+		V_unitprice,
+		V_availablestatus,
+		V_description1,
+		V_description2,
+		V_infourl,
+		V_pictureurl);
 
  END LOOP get_registro;
  CLOSE ACargar;
@@ -94,4 +105,3 @@ SELECT 'FIN';
 END$$
 
 DELIMITER ;
-
