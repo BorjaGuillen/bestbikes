@@ -11,11 +11,12 @@ import es.bestbikes.bean.PeticionBean;
 import es.bestbikes.jaxb.Filter;
 import es.bestbikes.jaxb.Item;
 import es.bestbikes.jaxb.Root;
-import es.bestbikes.jpa.CargaProductos;
 import es.bestbikes.types.TypeJaxb;
 import es.bestbikes.util.Config;
 import es.bestbikes.util.JaxbUtil;
 import es.bestbikes.util.Trazas;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -25,6 +26,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import javax.imageio.ImageIO;
 
 /**
  *
@@ -259,6 +261,17 @@ public class PeticionSrv {
         return lista;    
     }
 
-
+    public BufferedImage obtenerImagen(String ruta) {
+        BufferedImage salida = null;
+        try {
+            URL url = new URL(ruta);
+            salida = ImageIO.read(url);
+        } catch(Exception e) {
+            
+        }
+        return salida;
+    }
+    
+    
 
 }

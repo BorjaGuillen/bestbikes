@@ -10,8 +10,15 @@ import es.bestbikes.exception.ControlBbddException;
 import es.bestbikes.exception.ProductoExistente;
 import es.bestbikes.exception.ReferenciaProductoRepetida;
 import es.bestbikes.jpa.CargaProductos;
+import es.bestbikes.jpa.PsImage;
+import es.bestbikes.jpa.PsImageType;
 import es.bestbikes.jpa.PsProduct;
+import es.bestbikes.servicios.PeticionSrv;
+import es.bestbikes.util.Config;
 import es.bestbikes.util.Trazas;
+import es.bestbikes.util.UtilImagen;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -232,6 +239,29 @@ public class ProductoBBDD extends ControlBBDD{
             query.setParameter(1, porcentaje);
             query.setParameter(2, actuarPvp);
             em.getTransaction().commit();
+            
+            // Crear imagenes
+            List<PsImageType> tiposImg = null;
+            String rutaImagenes = Config.getInstance().get("b2b.rutaimg");
+            for (Iterator<CargaProductos> iterator = items.iterator(); iterator.hasNext();) {
+                CargaProductos next = iterator.next();
+                String codigo = next.getNumber();
+                String numeroImagen = obtenerNumeroImagen(codigo);
+                if (numeroImagen != null) {
+                    String nombreImagen = codigo + ".jpg";
+                    String pathImagen = UtilImagen.toPath(rutaImagenes);
+                    if (!new File(pathImagen).exists()) {
+                        BufferedImage img = PeticionSrv.getInstance().obtenerImagen(next.getPictureurl());
+                        UtilImagen.guardar(img, pathImagen + nombreImagen, img.getWidth(), img.getHeight());
+                        for (Iterator<PsImageType> itr1 = tiposImg.iterator(); itr1.hasNext();) {
+                            PsImageType imgType = itr1.next();
+                            nombreImagen = codigo + "-" + imgType.getName() + ".jpg";
+                            UtilImagen.guardar(img, pathImagen + nombreImagen, imgType.getWidth(), imgType.getHeight());
+                        }
+                    }
+                }
+            }
+
         } catch (Exception e) {
             if (em.getTransaction().isActive()) {
                 em.getTransaction().commit();
@@ -269,6 +299,32 @@ public class ProductoBBDD extends ControlBBDD{
         return lista;
     }
 
+    private String obtenerNumeroImagen(String codigo) {
+        String salida = null;
+        EntityManager em = getEntityManager(); 
+        try {
+            Query q = em.createNamedQuery("PsProduct.findBySupplierReference");
+            q.setParameter("supplierReference", codigo);
+            PsProduct psp = (PsProduct) q.getSingleResult();
+            
+            Query q2 = em.createNamedQuery("PsImage.findByIdProduct");
+            q2.setParameter("idProduct", psp.getIdProduct());
+            PsImage pimg = (PsImage) q2.getSingleResult();
+            
+            salida = pimg.getIdImage() + "";
+            
+        } catch (Exception e) {
+            Trazas.trazar(e.getMessage());
+            salida = null;
+        }
+        return salida;
+    }
 
+
+    /*                
+                PsProduct
+                PsImage
+                PsImageType        
+            */
 
 }
