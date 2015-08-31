@@ -19,10 +19,36 @@ public class UtilImagen {
     
     
     public static void guardar(BufferedImage img, String nombre, int ancho, int alto) throws IOException {
+        
         File file = new File(nombre);
         BufferedImage newImage = new BufferedImage(ancho, alto, BufferedImage.TYPE_INT_RGB);
         Graphics g = newImage.createGraphics();
-        g.drawImage(img, 0, 0, ancho, alto, null);
+        
+        int realW = img.getWidth();
+        int realH = img.getHeight();
+        
+        g.fillRect(0, 0, ancho, alto);
+        
+        int nuevoW = ancho;
+        int nuevoH = alto;
+        
+        double pW = ancho * 1.0 / realW;
+        double pH = alto * 1.0 / realH;
+        
+        double proporcion = pW;
+        if (pH < pW) {
+            proporcion = pH;
+        }
+        nuevoW = (int)Math.round(realW * proporcion);
+        nuevoH = (int)Math.round(realH * proporcion);
+        
+        
+        int posx = (ancho - nuevoW) / 2;
+        int posy = (alto - nuevoH) / 2;
+        
+        
+        
+        g.drawImage(img, posx, posy, nuevoW, nuevoH, null);
         g.dispose();        
         ImageIO.write(newImage, "jpg", file);
     }

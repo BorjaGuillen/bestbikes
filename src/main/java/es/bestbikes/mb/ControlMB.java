@@ -47,7 +47,7 @@ public class ControlMB implements Serializable {
     @PostConstruct
     public void init() {
         srv = PeticionSrv.getInstance();
-        filters = srv.buscarCategorias();
+        //filters = srv.buscarCategorias();
         porcentaje = -10;
         marcas = ProductoBBDD.getInstancia().listaMarcas();
         buscar();
@@ -111,11 +111,13 @@ public class ControlMB implements Serializable {
     public void cargarPvp() {
         boolean actuarPvp = true;
         ProductoBBDD.getInstancia().cargar(items, this.porcentaje, actuarPvp);
+        buscar();
     }
 
     public void cargarPC() {
         boolean actuarPvp = false;
         ProductoBBDD.getInstancia().cargar(items, this.porcentaje, actuarPvp);
+        buscar();
     }
 
     

@@ -229,43 +229,47 @@ public class ProductoBBDD extends ControlBBDD{
         EntityManager em = getEntityManager(); 
         try {
             em.getTransaction().begin();
-            for (Iterator<CargaProductos> iterator = items.iterator(); iterator.hasNext();) {
-                CargaProductos next = iterator.next();
-                em.refresh(next);
-            }
+            em.flush();
             em.getTransaction().commit();
+            
             em.getTransaction().begin();
-            Query query = em.createNativeQuery("{ CALL cargaProductos(?, ?) }");  
+            Query query = em.createNativeQuery("{call cargaProductos(?, ?)}");  
             query.setParameter(1, porcentaje);
             query.setParameter(2, actuarPvp);
+            query.executeUpdate();
             em.getTransaction().commit();
             
             // Crear imagenes
-            List<PsImageType> tiposImg = null;
+            Query query3 = em.createNamedQuery("PsImageType.findAll");  
+            List<PsImageType> tiposImg = query3.getResultList();
             String rutaImagenes = Config.getInstance().get("b2b.rutaimg");
             for (Iterator<CargaProductos> iterator = items.iterator(); iterator.hasNext();) {
                 CargaProductos next = iterator.next();
-                String codigo = next.getNumber();
-                String numeroImagen = obtenerNumeroImagen(codigo);
-                if (numeroImagen != null) {
-                    String nombreImagen = codigo + ".jpg";
-                    String pathImagen = UtilImagen.toPath(rutaImagenes);
-                    if (!new File(pathImagen).exists()) {
+                if (next.getCargar()) {
+                    String codigo = next.getNumber();
+                    String numeroImagen = obtenerNumeroImagen(codigo);
+                    if (numeroImagen != null) {
+                        String nombreImagen = numeroImagen + ".jpg";
+                        String pathImagen = UtilImagen.toPath(numeroImagen);
+                        if (!new File(rutaImagenes + pathImagen).exists()) {
+                            File dir = new File(rutaImagenes + pathImagen);
+                            dir.mkdirs();
+                        }
                         BufferedImage img = PeticionSrv.getInstance().obtenerImagen(next.getPictureurl());
-                        UtilImagen.guardar(img, pathImagen + nombreImagen, img.getWidth(), img.getHeight());
+                        UtilImagen.guardar(img, rutaImagenes + pathImagen + nombreImagen, img.getWidth(), img.getHeight());
                         for (Iterator<PsImageType> itr1 = tiposImg.iterator(); itr1.hasNext();) {
                             PsImageType imgType = itr1.next();
-                            nombreImagen = codigo + "-" + imgType.getName() + ".jpg";
-                            UtilImagen.guardar(img, pathImagen + nombreImagen, imgType.getWidth(), imgType.getHeight());
+                            nombreImagen = numeroImagen + "-" + imgType.getName() + ".jpg";
+                            UtilImagen.guardar(img, rutaImagenes + pathImagen + nombreImagen, imgType.getWidth(), imgType.getHeight());
                         }
                     }
                 }
             }
 
         } catch (Exception e) {
+            Trazas.trazarError(e.getMessage());
             if (em.getTransaction().isActive()) {
-                em.getTransaction().commit();
-                //em.getTransaction().rollback();
+                em.getTransaction().rollback();
             }
         }
         
@@ -274,6 +278,8 @@ public class ProductoBBDD extends ControlBBDD{
     public List<CargaProductos> buscarItems(String[] selectedMarcas) {
         List<CargaProductos> lista = new ArrayList<CargaProductos>();
         EntityManager em = getEntityManager(); 
+        em.clear();
+        em.getEntityManagerFactory().getCache().evictAll();
         try {
             String par = "'" + selectedMarcas[0] + "'";
             for (int i = 1; i < selectedMarcas.length; i++) {
@@ -291,6 +297,8 @@ public class ProductoBBDD extends ControlBBDD{
     public List<CargaProductos> buscarItems() {
         List<CargaProductos> lista = new ArrayList<CargaProductos>();
         EntityManager em = getEntityManager(); 
+        em.clear();
+        em.getEntityManagerFactory().getCache().evictAll();
         try {
             Query q = em.createNamedQuery("CargaProductos.findAll");
             lista = q.getResultList();
@@ -303,12 +311,12 @@ public class ProductoBBDD extends ControlBBDD{
         String salida = null;
         EntityManager em = getEntityManager(); 
         try {
-            Query q = em.createNamedQuery("PsProduct.findBySupplierReference");
+            Query q = em.createQuery("SELECT p.idProduct FROM PsProduct p WHERE p.supplierReference = :supplierReference");
             q.setParameter("supplierReference", codigo);
-            PsProduct psp = (PsProduct) q.getSingleResult();
+            Integer idproduct = (Integer) q.getSingleResult();
             
             Query q2 = em.createNamedQuery("PsImage.findByIdProduct");
-            q2.setParameter("idProduct", psp.getIdProduct());
+            q2.setParameter("idProduct", idproduct);
             PsImage pimg = (PsImage) q2.getSingleResult();
             
             salida = pimg.getIdImage() + "";
