@@ -267,11 +267,51 @@ public class PeticionSrv {
             URL url = new URL(ruta);
             salida = ImageIO.read(url);
         } catch(Exception e) {
-            
+            Trazas.trazarWarning(e.getMessage());
         }
         return salida;
     }
     
-    
+    public String obtenerDatosURL(String ruta) {
+        
+        if (ruta==null) return null;
+        String salida = ruta;
+        try {            
+            URL url = new URL(ruta);        
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Accept-Charset", "ISO-8859-1");
+            
+            if (conn.getResponseCode() != 200) {
+                throw new RuntimeException("Failed : HTTP error code : "
+                        + conn.getResponseCode());
+            }
+            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "ISO-8859-1"));
+            //BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+            
+            String output;
+            salida = "";
+            while ((output = br.readLine()) != null) {
+                salida += output;
+            }
+
+            conn.disconnect();
+           
+        } catch(Exception e) {
+            String nombreClaseAfectada;
+            nombreClaseAfectada = "("+this.getClass().getSimpleName()+"-obtenerDatosURL"+") ";
+            Trazas.trazarWarning(nombreClaseAfectada+e.getMessage());
+        }
+        
+        
+        String[] auxS = salida.split("<BODY scroll=auto>");
+        if (auxS.length>1) {
+            salida = auxS[1];
+            auxS = salida.split("</BODY>");
+            salida = auxS[0];
+        }
+        
+        return salida;
+    }
 
 }

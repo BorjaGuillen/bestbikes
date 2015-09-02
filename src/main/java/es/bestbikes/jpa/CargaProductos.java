@@ -72,12 +72,12 @@ public class CargaProductos implements Serializable {
     private BigDecimal recommendedretailprice;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 200)
+    @Size(min = 1, max = 65000)
     @Column(name = "description1")
     private String description1;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 200)
+    @Size(min = 1, max = 65000)
     @Column(name = "description2")
     private String description2;
     @Basic(optional = false)
@@ -125,7 +125,7 @@ public class CargaProductos implements Serializable {
     private String categorykey;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 200)
+    @Size(min = 1, max = 65000)
     @Column(name = "infourl")
     private String infourl;
     @Basic(optional = false)

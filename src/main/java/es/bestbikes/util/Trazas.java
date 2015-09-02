@@ -5,6 +5,8 @@
  */
 package es.bestbikes.util;
 
+import java.util.Calendar;
+import java.util.Date;
 import org.apache.log4j.Logger;
 
 /**
@@ -14,24 +16,28 @@ import org.apache.log4j.Logger;
  */
 public class Trazas {
     
-         
+   
+    
     public static void trazar(String mensaje) {
         Logger log = Logger.getLogger("Logger-bestbike");
-        log.debug(mensaje);
-        
-        System.out.println(mensaje);
+        Date time = new Date();
+        mensaje="["+time.toString()+"]"+mensaje;
+        log.debug(mensaje);        
+        System.out.println("Debug: " +mensaje);
     }
      public static void trazarWarning(String mensaje) {
         Logger log = Logger.getLogger("Logger bestbike");
-        log.warn(mensaje);
-        
+        Date time = new Date();
+        mensaje="["+time.toString()+"]"+mensaje;
+        log.warn(mensaje);        
         System.out.println("Aviso: " + mensaje);
     }
     
     public static void trazarError(String mensaje) {
         Logger log = Logger.getLogger("Logger bestbike");
+         Date time = new Date();
+        mensaje="["+time.toString()+"]"+mensaje;
         log.error(mensaje);
-        
         System.out.println("Error: "+mensaje);
     }
    

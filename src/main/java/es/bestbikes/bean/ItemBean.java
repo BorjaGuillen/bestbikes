@@ -6,6 +6,8 @@
 package es.bestbikes.bean;
 
 import es.bestbikes.jaxb.Item;
+import es.bestbikes.servicios.PeticionSrv;
+import es.bestbikes.util.Trazas;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -38,7 +40,16 @@ public class ItemBean extends Item implements Serializable {
         this.customstariffnumber = next.getCustomstariffnumber();
         this.supplier = next.getSupplier();
         this.categorykey = next.getCategorykey();
-        this.infourl = next.getInfourl();
+        
+        int i=0;
+        while (this.infourl==null && i<4) {  
+            String ruta=next.getInfourl();
+            
+            this.infourl = PeticionSrv.getInstance().obtenerDatosURL(ruta);
+            i++;
+        }
+        
+        //this.infourl = next.getInfourl();
         this.pictureurl = next.getPictureurl();
         this.cargar = true;
     }
