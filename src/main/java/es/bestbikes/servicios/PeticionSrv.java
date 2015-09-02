@@ -310,7 +310,7 @@ public class PeticionSrv {
                 while(salida.charAt(index) != '>') {
                     index++;
                 }
-                String tempo = salida.substring(index);
+                String tempo = salida.substring(index+1);
                 salida = tempo.split("</BODY>")[0];
             }
         }
