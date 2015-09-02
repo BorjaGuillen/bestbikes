@@ -304,6 +304,18 @@ public class PeticionSrv {
             Trazas.trazarWarning(nombreClaseAfectada+e.getMessage());
         }
         
+        if (salida != null) {
+            int index = salida.toUpperCase().indexOf("<BODY");
+            if (index >= 0) {
+                while(salida.charAt(index) != '>') {
+                    index++;
+                }
+                String tempo = salida.substring(index);
+                salida = tempo.split("</BODY>")[0];
+            }
+        }
+        
+        
        /*
         String[] auxS = salida.split("<BODY scroll=auto>");
         if (auxS.length>1) {
