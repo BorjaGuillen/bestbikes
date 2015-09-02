@@ -255,12 +255,24 @@ public class ProductoBBDD extends ControlBBDD{
                             File dir = new File(rutaImagenes + pathImagen);
                             dir.mkdirs();
                         }
-                        BufferedImage img = PeticionSrv.getInstance().obtenerImagen(next.getPictureurl());
-                        UtilImagen.guardar(img, rutaImagenes + pathImagen + nombreImagen, img.getWidth(), img.getHeight());
-                        for (Iterator<PsImageType> itr1 = tiposImg.iterator(); itr1.hasNext();) {
-                            PsImageType imgType = itr1.next();
-                            nombreImagen = numeroImagen + "-" + imgType.getName() + ".jpg";
-                            UtilImagen.guardar(img, rutaImagenes + pathImagen + nombreImagen, imgType.getWidth(), imgType.getHeight());
+                        BufferedImage img = null;
+                        int numMaxReintentos = Integer.getInteger(Config.getInstance().get("b2b.reintentos"));
+                        int reintentos = 0;
+                        while (img == null && reintentos < numMaxReintentos) {
+                            reintentos++;
+                            img = PeticionSrv.getInstance().obtenerImagen(next.getPictureurl());    
+                        }
+                        if (img != null) {
+                            UtilImagen.guardar(img, rutaImagenes + pathImagen + nombreImagen, img.getWidth(), img.getHeight());
+                            for (Iterator<PsImageType> itr1 = tiposImg.iterator(); itr1.hasNext();) {
+                                PsImageType imgType = itr1.next();
+                                nombreImagen = numeroImagen + "-" + imgType.getName() + ".jpg";
+                                UtilImagen.guardar(img, rutaImagenes + pathImagen + nombreImagen, imgType.getWidth(), imgType.getHeight());
+                            }
+                        } else {
+                            Trazas.trazar("Number: " + next.getNumber() 
+                                        + "Nombre:" + nombreImagen 
+                                        + "URL: " + next.getPictureurl());
                         }
                     }
                 }

@@ -46,11 +46,11 @@ public class UtilImagen {
         int posx = (ancho - nuevoW) / 2;
         int posy = (alto - nuevoH) / 2;
         
-        
-        
         g.drawImage(img, posx, posy, nuevoW, nuevoH, null);
-        g.dispose();        
+
         ImageIO.write(newImage, "jpg", file);
+        g.dispose();  
+        newImage.flush();
     }
     
     public static String toPath(String codigo) {

@@ -38,12 +38,10 @@ public class ControlMB implements Serializable {
     
     private String[] selectedMarcas;
 
-    
     private  List<String> marcas;
 
-    
     private int porcentaje;
-
+    
     @PostConstruct
     public void init() {
         srv = PeticionSrv.getInstance();
@@ -51,6 +49,14 @@ public class ControlMB implements Serializable {
         porcentaje = -10;
         marcas = ProductoBBDD.getInstancia().listaMarcas();
         buscar();
+    }
+
+    public PeticionSrv getSrv() {
+        return srv;
+    }
+
+    public void setSrv(PeticionSrv srv) {
+        this.srv = srv;
     }
 
     public PeticionBean getPeticion() {
