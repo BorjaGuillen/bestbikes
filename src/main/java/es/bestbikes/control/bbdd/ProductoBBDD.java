@@ -256,7 +256,7 @@ public class ProductoBBDD extends ControlBBDD{
                             dir.mkdirs();
                         }
                         BufferedImage img = null;
-                        int numMaxReintentos = Integer.getInteger(Config.getInstance().get("b2b.reintentos"));
+                        int numMaxReintentos = Integer.parseInt(Config.getInstance().get("b2b.reintentos"));
                         int reintentos = 0;
                         while (img == null && reintentos < numMaxReintentos) {
                             reintentos++;
