@@ -240,40 +240,56 @@ public class ProductoBBDD extends ControlBBDD{
             em.getTransaction().commit();
             
             // Crear imagenes
+            Trazas.trazar("---INICIO PETICION IMAGENES---"); 
             Query query3 = em.createNamedQuery("PsImageType.findAll");  
             List<PsImageType> tiposImg = query3.getResultList();
             String rutaImagenes = Config.getInstance().get("b2b.rutaimg");
+            Trazas.trazar("Ruta imagenes" + rutaImagenes); 
             for (Iterator<CargaProductos> iterator = items.iterator(); iterator.hasNext();) {
                 CargaProductos next = iterator.next();
                 if (next.getCargar()) {
+                    Trazas.trazar("Producto a cargar");
                     String codigo = next.getNumber();
+                    Trazas.trazar("Codigo " + codigo);
                     String numeroImagen = obtenerNumeroImagen(codigo);
+                    Trazas.trazar("Numero Imagen " + numeroImagen);
                     if (numeroImagen != null) {
                         String nombreImagen = numeroImagen + ".jpg";
+                        Trazas.trazar("Nombre imagen " + nombreImagen);
                         String pathImagen = UtilImagen.toPath(numeroImagen);
+                        Trazas.trazar("Path imagen " + pathImagen);
                         if (!new File(rutaImagenes + pathImagen).exists()) {
+                            Trazas.trazar("Creo directorio");
                             File dir = new File(rutaImagenes + pathImagen);
                             dir.mkdirs();
                         }
                         BufferedImage img = null;
                         int numMaxReintentos = Integer.parseInt(Config.getInstance().get("b2b.reintentos"));
+                        Trazas.trazar("Numero de reintentos " + numMaxReintentos);
                         int reintentos = 0;
                         while (img == null && reintentos < numMaxReintentos) {
+                            Trazas.trazar("Reintento " + reintentos);
                             reintentos++;
                             img = PeticionSrv.getInstance().obtenerImagen(next.getPictureurl());    
                         }
                         if (img != null) {
+                            Trazas.trazar("Tengo imagen ");
                             UtilImagen.guardar(img, rutaImagenes + pathImagen + nombreImagen, img.getWidth(), img.getHeight());
+                            Trazas.trazar("Guardo imagen principal");
                             for (Iterator<PsImageType> itr1 = tiposImg.iterator(); itr1.hasNext();) {
                                 PsImageType imgType = itr1.next();
                                 nombreImagen = numeroImagen + "-" + imgType.getName() + ".jpg";
+                                Trazas.trazar("Guardo imagen redimensionada " + nombreImagen);
                                 UtilImagen.guardar(img, rutaImagenes + pathImagen + nombreImagen, imgType.getWidth(), imgType.getHeight());
                             }
+                            Trazas.trazar("Fin de guardar imagenes");
+
                         } else {
                             Trazas.trazar("Number: " + next.getNumber() 
                                         + "Nombre:" + nombreImagen 
                                         + "URL: " + next.getPictureurl());
                         }
+                        Trazas.trazar("Fin de todo");
                     }
                 }
             }
