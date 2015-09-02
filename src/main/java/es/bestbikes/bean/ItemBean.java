@@ -48,7 +48,7 @@ public class ItemBean extends Item implements Serializable {
             this.infourl = PeticionSrv.getInstance().obtenerDatosURL(ruta);
             i++;
         }
-        
+        Trazas.trazar(this.number+" - "+this.infourl);
         //this.infourl = next.getInfourl();
         this.pictureurl = next.getPictureurl();
         this.cargar = true;

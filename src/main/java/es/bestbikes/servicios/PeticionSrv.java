@@ -275,7 +275,7 @@ public class PeticionSrv {
     public String obtenerDatosURL(String ruta) {
         
         if (ruta==null) return null;
-        String salida = ruta;
+        String salida = null;
         try {            
             URL url = new URL(ruta);        
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -298,19 +298,20 @@ public class PeticionSrv {
             conn.disconnect();
            
         } catch(Exception e) {
+            salida = null;
             String nombreClaseAfectada;
             nombreClaseAfectada = "("+this.getClass().getSimpleName()+"-obtenerDatosURL"+") ";
             Trazas.trazarWarning(nombreClaseAfectada+e.getMessage());
         }
         
-        
+       /*
         String[] auxS = salida.split("<BODY scroll=auto>");
         if (auxS.length>1) {
             salida = auxS[1];
             auxS = salida.split("</BODY>");
             salida = auxS[0];
         }
-        
+        */
         return salida;
     }
 
