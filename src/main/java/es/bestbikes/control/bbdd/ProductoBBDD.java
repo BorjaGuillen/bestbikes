@@ -257,7 +257,7 @@ public class ProductoBBDD extends ControlBBDD{
             Trazas.trazar("Ruta imagenes" + rutaImagenes); 
             for (Iterator<CargaProductos> iterator = items.iterator(); iterator.hasNext();) {
                 CargaProductos next = iterator.next();
-                if (next!= null && next.getCargar()) {
+                if (next!= null && next.getCargar()!=null && next.getCargar()==true) {
                     Trazas.trazar("Producto a cargar");
                     String codigo = next.getNumber();
                     Trazas.trazar("Codigo " + codigo);
