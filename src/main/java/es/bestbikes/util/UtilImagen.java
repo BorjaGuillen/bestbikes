@@ -10,16 +10,17 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import org.apache.log4j.Logger;
 
 /**
  *
  * @author jorge
  */
 public class UtilImagen {
-    
+    private static final Logger log=Logger.getLogger("log4j.xml");
     
     public static void guardar(BufferedImage img, String nombre, int ancho, int alto) throws IOException {
-        
+        try{
         File file = new File(nombre);
         BufferedImage newImage = new BufferedImage(ancho, alto, BufferedImage.TYPE_INT_RGB);
         Graphics g = newImage.createGraphics();
@@ -51,6 +52,20 @@ public class UtilImagen {
         ImageIO.write(newImage, "jpg", file);
         g.dispose();  
         newImage.flush();
+        }catch (Exception e){
+            String stack=null;
+            for (int i = 0; i < e.getStackTrace().length; i++) {
+                
+                stack=stack+e.getStackTrace()[i];
+                stack=stack+"\n";
+                
+                
+            }
+            
+            
+           log.error(e.getMessage()+"-"+stack);
+        
+        }
     }
     
     public static String toPath(String codigo) {

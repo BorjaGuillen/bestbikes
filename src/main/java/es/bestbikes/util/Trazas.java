@@ -19,26 +19,30 @@ public class Trazas {
    
     
     public static void trazar(String mensaje) {
-        Logger log = Logger.getLogger("Logger-bestbike");
-        Date time = new Date();
-        mensaje="["+time.toString()+"]"+mensaje;
+        Logger log = Logger.getLogger("log4j.xml");
+       // Date time = new Date();
+        // mensaje="["+time.toString()+log.getParent()+"]"+mensaje;
         log.debug(mensaje);        
-        System.out.println("Debug: " +mensaje);
+        // System.out.println("Debug: "+mensaje);
     }
      public static void trazarWarning(String mensaje) {
-        Logger log = Logger.getLogger("Logger bestbike");
-        Date time = new Date();
-        mensaje="["+time.toString()+"]"+mensaje;
+        Logger log = Logger.getLogger("log4j.xml");
+       // Date time = new Date();
+       // mensaje="["+time.toString()+log.getParent().getName()+"]"+mensaje;
         log.warn(mensaje);        
-        System.out.println("Aviso: " + mensaje);
+        // System.out.println("Aviso: " + mensaje);
     }
     
     public static void trazarError(String mensaje) {
-        Logger log = Logger.getLogger("Logger bestbike");
-         Date time = new Date();
-        mensaje="["+time.toString()+"]"+mensaje;
+        Logger log = Logger.getLogger("log4j.xml");
+         
+       //  Date time = new Date();
+       // mensaje="["+time.toString()+log.getParent().getName() +"]"+mensaje;
         log.error(mensaje);
-        System.out.println("Error: "+mensaje);
+        
+        // System.out.println("Error: "+mensaje);
+        
+        
     }
    
 }

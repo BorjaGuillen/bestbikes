@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -33,10 +34,13 @@ import javax.persistence.Query;
  */
 public class ProductoBBDD extends ControlBBDD{
     
+    
+    
     private static ProductoBBDD bbdd;
+    private static Logger log;
     
     private ProductoBBDD() {
-        
+        log = Logger.getLogger("log4j.xml");
     }
     
     public static ProductoBBDD getInstancia() {
@@ -149,7 +153,7 @@ public class ProductoBBDD extends ControlBBDD{
         } 
          
          catch (ProductoExistente e){
-             Trazas.trazarWarning(e.getMessage());
+             log.warn(e.getMessage());
                      
          }
          
@@ -158,7 +162,9 @@ public class ProductoBBDD extends ControlBBDD{
          }
          
          catch (Exception e) {
-            Trazas.trazarError(e.getMessage());
+            //Trazas.trazarError(e.getMessage());
+             
+             log.error(e.getMessage());
             throw new  ControlBbddException ("error al insertar un producto en BD"+productoNuevo.toString());
         }
     
@@ -176,12 +182,15 @@ public class ProductoBBDD extends ControlBBDD{
             } 
             
             catch (ProductoExistente ex) {
-                Trazas.trazarWarning("error al insertar un producto en BD"+ex.toString());
+                //Trazas.trazarWarning("error al insertar un producto en BD"+ex.toString());
+                log.warn("error al insertar un producto en BD"+ex.toString());
                 errores++;
             }
             
             catch (Exception e) {
-            Trazas.trazarError(e.getMessage());
+            //Trazas.trazarError(e.getMessage());
+                
+                log.error(e.getMessage());
             errores++;
             }
         }
@@ -205,6 +214,7 @@ public class ProductoBBDD extends ControlBBDD{
             em.persist(pro);
             em.getTransaction().commit();
         } catch (Exception e) {
+            log.warn(e.getMessage());
             if (em.getTransaction().isActive()) {
                 em.getTransaction().rollback();
             }
@@ -295,7 +305,17 @@ public class ProductoBBDD extends ControlBBDD{
             }
 
         } catch (Exception e) {
-            Trazas.trazarError(e.getMessage());
+            // Trazas.trazarError(e.getMessage());
+           //e.getStackTrace()[0].toString()
+            String stack=null;
+            for (int i = 0; i < e.getStackTrace().length; i++) {
+                
+                stack=stack+e.getStackTrace()[i];
+                stack=stack+"\n";
+            }
+                        
+           log.error(e.getMessage()+"-"+stack);
+          
             if (em.getTransaction().isActive()) {
                 em.getTransaction().rollback();
             }
@@ -317,7 +337,8 @@ public class ProductoBBDD extends ControlBBDD{
             Query q = em.createQuery("SELECT c FROM CargaProductos c WHERE c.supplier in (" + par + ")");
             lista = q.getResultList();
         } catch (Exception e) {
-            Trazas.trazar(e.getMessage());
+            //Trazas.trazar(e.getMessage());
+            log.debug(e.getMessage());
         }
         return lista;
     }
