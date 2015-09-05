@@ -20,7 +20,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `cargarProducto`(
 )
 BEGIN
 
-	DECLARE v_id_categoria int(10) DEFAULT 1;
+	DECLARE v_id_categoria int(10) DEFAULT 2;
 	DECLARE v_id_marca int (10) DEFAULT 0;
 	DECLARE v_id_product int (10) DEFAULT 0;
 	DECLARE v_id_image int (10) DEFAULT 0;
@@ -30,7 +30,8 @@ BEGIN
 	DECLARE v_error INTEGER DEFAULT 0;
 	DECLARE aux_bucles INTEGER DEFAULT 0;
 	DECLARE aux_integer INTEGER DEFAULT 0;
-	
+	DECLARE v_id_tax int(10) DEFAULT 1;
+	DECLARE v_id_tax_rate decimal(10,3) DEFAULT 21;	
 
 
 
@@ -90,10 +91,15 @@ BEGIN
 
 
 -- Insertamos en la tabla ps_manufacturer_shop la nueva marca:
-SELECT 'insertamos en la tabla ps_manufacturer_shop la nueva marca';	
 		INSERT INTO bestbike_bd.ps_manufacturer_shop VALUES (v_id_marca,1);
 
 	END IF; -- v_id_marca=0
+/*
+Obtemos el valor actual de impuestos con la id_tax 1 
+
+*/
+
+	select rate from ps_tax where id_tax=v_id_tax into v_id_tax_rate;
 
 	
 
@@ -101,12 +107,11 @@ SELECT 'insertamos en la tabla ps_manufacturer_shop la nueva marca';
 	Calculamos el valor del producto, según vayamos a calcularlo en base al PVP o al precio de compra
 
 */
-SELECT 'Calculamos el valor del producto, según vayamos a calcularlo en base al PVP o al precio de compra';	
+	SELECT 'Calculamos el valor del producto, según vayamos a calcularlo en base al PVP o al precio de compra';	
 
 	IF actuarPVP=1 THEN -- Actuamos sobre el valor de de recommendedretailprice tomando el valor =recommendedretailprice+(recommendedretailprice*incremento)/100
-		
 			SET V_recommendedretailprice=V_recommendedretailprice+(V_recommendedretailprice*incremento)/100;
-	
+			SET V_recommendedretailprice=V_recommendedretailprice+(V_recommendedretailprice*(v_id_tax_rate))/100;	
 	ELSE   -- actuarPVP=0 Tenemos que insertar el elemento poniendo como valor de V_recommendedretailprice su valor unitprice+(unitprice*incremento)/100
 
 			SET V_recommendedretailprice=V_unitprice+(V_unitprice*incremento)/100;
@@ -115,17 +120,12 @@ SELECT 'Calculamos el valor del producto, según vayamos a calcularlo en base al
 
 	
 	/*
-		 Tendremos que asociar los códigos de catergoria que nos aporta el servicio web productoNuevo.getCategorykey();
-		 a los códigos de los que disponemos en prestaShopen (ps_category ps_category_lang). Una vez asociados asignaremos 
-		 el id correspondiente al IdCategoryDefault, en caso de no encontrarlo no cargamos al producto dando un error de 
-		 no existe la categoría xxx del producto a cargar.
-	
+             Buscamos la categoria en la tabla de catPS_catRV, en caso de no encontrarla se cargara la categoría por defecto 2, que es inicio. 	
 	*/
 
 	select id_categoria from bestbike_bd.catPS_catSRV where categorykey=V_categorykey INTO v_id_categoria;
 	
 
-select v_error;
 -- -----------------------------------------------------------------------------------------
 	IF v_id_product=0 AND v_error=0 THEN -- Si el elemento no existe insertamos
 SELECT 'Si el elemento no existe insertamos';	
@@ -193,7 +193,7 @@ SELECT 	'v_id_marca=',v_id_marca,
 					v_id_categoria, -- id_category_default
 					1, -- id_shop_default,
 					1, -- id_tax_rules_group,
-					1, -- on_sale,
+					0, -- on_sale,
 					0, -- online_only,
 					'', -- ean13,
 					'', -- upc,
@@ -201,7 +201,7 @@ SELECT 	'v_id_marca=',v_id_marca,
 					0, -- quantity,
 					1, -- minimal_quantity,
 					V_recommendedretailprice, -- price,
-					0, -- wholesale_price,
+					V_unitprice, -- wholesale_price,
 					'', -- unity,
 					0, -- unit_price_ratio,
 					0, -- additional_shipping_cost,
@@ -278,20 +278,20 @@ SELECT 	'v_id_marca=',v_id_marca,
                 1, -- id_shop    int(10) UN PK
                 v_id_categoria, -- id_category_default    int(10) UN
                 1, -- id_tax_rules_group    int(11) UN
-                1, -- on_sale    tinyint(1) UN
+                0, -- on_sale    tinyint(1) UN
                 0, -- online_only    tinyint(1) UN
                 0, -- ecotax    decimal(17,6)
                 1, -- minimal_quantity    int(10) UN
                 V_recommendedretailprice, -- price    decimal(20,6)
-                0, -- wholesale_price    decimal(20,6)
+                V_unitprice, -- wholesale_price    decimal(20,6)
                 '', -- unity    varchar(255)
                 0, -- unit_price_ratio    decimal(20,6)
                 0, -- additional_shipping_cost    decimal(20,2)
                 0, -- customizable    tinyint(2)
                 0, -- uploadable_files    tinyint(4)
                 0, -- text_fields    tinyint(4)
-                1, -- active    tinyint(1) UN
-                404, -- redirect_type    enum('','404','301','302')
+                V_availablestatus, -- active    tinyint(1) UN
+                '404', -- redirect_type    enum('','404','301','302')
                 0, -- id_product_redirected    int(10) UN
                 1, -- available_for_order    tinyint(1)
                 now(), -- available_date    date
@@ -327,8 +327,8 @@ SELECT 	'v_id_marca=',v_id_marca,
 			
 			-- Cargamos las descripciones
 
-	SELECT CONCAT('<p>',V_description1,'</p><p>',V_description2,'</p><p>',V_supplieritemnumber,'</p>') into v_descripcionLarga;
-	SELECT CONCAT(V_description1,' ',V_supplieritemnumber) into v_descripcionCorta;
+	SELECT CONCAT('<p>',V_description1,'</p><p>',V_description2,'</p><p>',V_supplieritemnumber,'</p>') into v_descripcionCorta;
+        SET v_descripcionLarga= v_descripcionCorta;-- V_infourl;
 
 		SET aux_bucles=0;
 		bucle: LOOP
@@ -354,9 +354,9 @@ SELECT 	'v_id_marca=',v_id_marca,
 					v_descripcionLarga, -- description	text
 					v_descripcionCorta, -- description_short	text
 					'', -- link_rewrite	varchar(128)
-					'', -- meta_description	varchar(255)
-					'', -- meta_keywords	varchar(255)
-					'', -- meta_title	varchar(128)
+					LEFT(V_description1,128), -- meta_description	varchar(255)
+					LEFT(V_description1,128), -- meta_keywords	varchar(255)
+					LEFT(V_description1,128), -- meta_title	varchar(128)
 					LEFT(V_description1,128), -- name	varchar(128)
 					'', -- available_now	varchar(255)
 					'' -- available_later	varchar(255)
@@ -387,12 +387,6 @@ SELECT 	'v_id_marca=',v_id_marca,
 
 -- Cargamos los datos de imagen
 
-/*
-'ps_image'
-'ps_image_lang'  
-'ps_image_shop'
-'ps_product_attribute_image'
- */
 
 
 		insert into bestbike_bd.ps_image (
@@ -430,19 +424,18 @@ SELECT 	'v_id_marca=',v_id_marca,
 		END LOOP bucle; SET aux_bucles=0;
 
 -- Insertamos en ps_image_shop
-
 			INSERT INTO bestbike_bd.ps_image_shop (
+                                id_product,
 				id_image,
 				id_shop,
 				cover
 			)
 			VALUES (
-				v_id_image, -- id_image	int(11) UN
+                        v_id_product,	
+			v_id_image, -- id_image	int(11) UN
 				1, -- id_shop	int(11) UN
 				1 -- cover	tinyint(1)
 			);
-
-/* bestbike_bd.ps_product_carrier c */
 
 
 
@@ -457,7 +450,6 @@ SELECT 	'v_id_marca=',v_id_marca,
 				3, -- id_carrier_reference	int(10) UN PK
 				1 -- id_shop	int(10) UN PK
 			);
-
 
 	ELSE -- aux_count El elemento ya existia y vamos a actualizarlo
 
