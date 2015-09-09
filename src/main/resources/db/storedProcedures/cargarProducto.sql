@@ -460,6 +460,12 @@ SELECT 	'v_id_marca=',v_id_marca,
 			date_upd=now()
 		WHERE id_product=v_id_product;
 
+                update ps_product_shop 
+		SET price= V_recommendedretailprice,
+			active=V_availablestatus, 
+			date_upd=now()
+		WHERE id_product=v_id_product;
+
 		
 
 	END IF; -- v_id_product=0
