@@ -5,6 +5,7 @@
  */
 package es.bestbikes.test;
 
+import es.bestbikes.bean.FilterBean;
 import es.bestbikes.bean.ItemBean;
 import es.bestbikes.bean.PeticionBean;
 import es.bestbikes.control.bbdd.ProductoBBDD;
@@ -49,6 +50,20 @@ public class PeticionSrvTest {
         Root xml = (Root) JaxbUtil.unmarshall(salida, TypeJaxb.BEST_BIKES);
         System.out.println(xml.getGUID());
     }
+    
+    
+    @Test
+    @Ignore
+    public void pedirCategorias() {
+        PeticionSrv srv = PeticionSrv.getInstance();
+        
+        List<FilterBean> salida = srv.buscarCategorias();
+        for (FilterBean salida1 : salida) {
+            System.out.println(salida1.getFilterkey() + "\t\t" + salida1.getFilterdesc());    
+        }
+        
+        
+    }    
     
     
     @Test
