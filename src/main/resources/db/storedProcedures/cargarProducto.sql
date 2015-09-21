@@ -111,7 +111,7 @@ Obtemos el valor actual de impuestos con la id_tax 1
 
 	IF actuarPVP=1 THEN -- Actuamos sobre el valor de de recommendedretailprice tomando el valor =recommendedretailprice+(recommendedretailprice*incremento)/100
 			SET V_recommendedretailprice=V_recommendedretailprice+(V_recommendedretailprice*incremento)/100;
-			SET V_recommendedretailprice=V_recommendedretailprice+(V_recommendedretailprice*(v_id_tax_rate))/100;	
+			SET V_recommendedretailprice=(V_recommendedretailprice*100)/(v_id_tax_rate+100);	
 	ELSE   -- actuarPVP=0 Tenemos que insertar el elemento poniendo como valor de V_recommendedretailprice su valor unitprice+(unitprice*incremento)/100
 
 			SET V_recommendedretailprice=V_unitprice+(V_unitprice*incremento)/100;

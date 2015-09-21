@@ -307,7 +307,7 @@ public class ProductoBBDD extends ControlBBDD{
                     }
                 }
             }
-            File fcontrol = new File(rutaImagenes + "\\" + Config.getInstance().get("b2b.fichero.control"));
+            File fcontrol = new File(rutaImagenes + "/" + Config.getInstance().get("b2b.fichero.control"));
             fcontrol.createNewFile();
 
         } catch (Exception e) {
