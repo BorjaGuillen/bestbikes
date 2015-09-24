@@ -92,7 +92,7 @@ public class PeticionSrv {
             if (peticion.getSearchpattern() != null) {
                 urlstring += "&searchpattern=*";            
             }
-            
+            urlstring += "&noek=0&ouvp=0&noavail=0";
             Trazas.trazar(urlstring);
             
             URL url = new URL(urlstring);
