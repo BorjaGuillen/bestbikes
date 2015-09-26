@@ -270,7 +270,9 @@ public class ProductoBBDD extends ControlBBDD{
                         String pathImagen = UtilImagen.toPath(numeroImagen);
                         Trazas.trazar("Path imagen " + pathImagen);
                         
-                        if (!new File(rutaImagenesPrestashop + pathImagen + nombreImagen).exists()) {
+                        boolean sobrescribirimagen = "S".equals(Config.getInstance().get("b2b.sobreescribir.img"));
+                        
+                        if (sobrescribirimagen || !sobrescribirimagen && !new File(rutaImagenesPrestashop + pathImagen + nombreImagen).exists()) {
                             if (!new File(rutaImagenes + pathImagen).exists()) {
                                 Trazas.trazar("Creo directorio");
                                 File dir = new File(rutaImagenes + pathImagen);
