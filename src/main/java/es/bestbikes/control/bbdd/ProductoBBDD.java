@@ -13,6 +13,7 @@ import es.bestbikes.jpa.CargaProductos;
 import es.bestbikes.jpa.PsImage;
 import es.bestbikes.jpa.PsImageType;
 import es.bestbikes.jpa.PsProduct;
+import es.bestbikes.jpa.PsProductLang;
 import es.bestbikes.servicios.PeticionSrv;
 import es.bestbikes.util.Config;
 import es.bestbikes.util.Trazas;
@@ -259,6 +260,22 @@ public class ProductoBBDD extends ControlBBDD{
             for (Iterator<CargaProductos> iterator = items.iterator(); iterator.hasNext();) {
                 CargaProductos next = iterator.next();
                 if (next!= null && next.getCargar()!=null && next.getCargar()==true) {
+                    // CARGA TEXTOS
+                    int i=0;
+                    String html = null;
+                    while (next.getInfourl()!=null && !"N.A.".equals(next.getInfourl()) && i<4) {  
+                        String ruta=next.getInfourl();
+                        html = PeticionSrv.getInstance().obtenerDatosURL(ruta);
+                        if (html != null) {
+                            i = 5;
+                        }
+                        i++;
+                    }
+                    if (html!=null && !"N.A.".equals(html) && !"".equals(html.trim())) {
+                        cargarDescripcionLarga(next.getNumber(), html);
+                    }
+                    
+                    // CARGA IMAGENES
                     if (!"N.A.".equals(next.getPictureurl())) {
                         Trazas.trazar("Producto a cargar");
                         String codigo = next.getNumber();
@@ -309,6 +326,7 @@ public class ProductoBBDD extends ControlBBDD{
                             Trazas.trazar("Fin de todo");
                         }
                     }    
+                    
                 }
             }
             File fcontrol = new File(rutaImagenes + "/" + Config.getInstance().get("b2b.fichero.control"));
@@ -393,5 +411,34 @@ public class ProductoBBDD extends ControlBBDD{
                 PsImage
                 PsImageType        
             */
+
+    private void cargarDescripcionLarga(String number, String html) {
+        EntityManager em = getEntityManager(); 
+        try {
+            Query q = em.createQuery("SELECT p.idProduct FROM PsProduct p WHERE p.supplierReference = :supplierReference");
+            q.setParameter("supplierReference", number);
+            Integer idproduct = (Integer) q.getSingleResult();
+            
+            if (idproduct != null) {
+                Query query2 = em.createNamedQuery("PsProductLang.findByIdProduct");
+                List<PsProductLang> listPsLang = (List<PsProductLang>) query2.setParameter("idProduct", idproduct).getResultList();
+                for (PsProductLang psLang : listPsLang) {
+                    if (psLang.getDescription() == null) {
+                        psLang.setDescription("");
+                    }
+                    psLang.setDescription(psLang.getDescription() + "<br>" + html);
+                    em.getTransaction().begin();
+                    em.persist(psLang);
+                    em.getTransaction().commit();
+                }
+            }
+            
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            Trazas.trazar(e.getMessage());
+        }
+    }
 
 }
