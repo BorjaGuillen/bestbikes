@@ -11,6 +11,7 @@ import es.bestbikes.bean.PeticionBean;
 import es.bestbikes.jaxb.Filter;
 import es.bestbikes.jaxb.Item;
 import es.bestbikes.jaxb.Root;
+import es.bestbikes.types.TypeAtributos;
 import es.bestbikes.types.TypeJaxb;
 import es.bestbikes.util.Config;
 import es.bestbikes.util.JaxbUtil;
@@ -92,6 +93,10 @@ public class PeticionSrv {
             if (peticion.getSearchpattern() != null) {
                 urlstring += "&searchpattern=*";            
             }
+            if (peticion.getAtributo()!= null) {
+                urlstring += "&searchpattern=" + peticion.getAtributo();            
+            }
+
             urlstring += "&noek=0&ouvp=0&noavail=0";
             Trazas.trazar(urlstring);
             
@@ -326,5 +331,44 @@ public class PeticionSrv {
         */
         return salida;
     }
+
+
+    List<ItemBean> obtenerItemsPorAtributo(TypeAtributos objTA) {
+        List<ItemBean> lista = new ArrayList<ItemBean>();
+        
+        int nmpagina = 1;
+        int nmpaginas = nmpagina + 1;
+
+        while (nmpagina <= nmpaginas) {
+            PeticionBean p = new PeticionBean();
+            p.setUrl(Config.getInstance().get("b2b.url"));
+            p.setLoginid(Config.getInstance().get("b2b.loginid"));
+            p.setPassword(Config.getInstance().get("b2b.password"));
+            p.setProcesstype(Config.getInstance().get("b2b.processtype"));
+            //p.setCategory(Config.getInstance().get("b2b.category"));
+            //p.setCategory(categoria);
+            p.setPagesize(Config.getInstance().get("b2b.pagesize"));
+            p.setPage(nmpagina + "");
+            p.setCategory(objTA.getCodcategoria());
+            p.setAtributo(objTA.getAtributo());
+
+            String salida = srv.buscar(p);
+
+            Root xml = (Root) JaxbUtil.unmarshall(salida, TypeJaxb.BEST_BIKES);
+            if (xml != null) {
+                nmpaginas = xml.getOfpages().intValue();
+                List<Item> items = xml.getItem();
+
+
+                for (Iterator<Item> iterator = items.iterator(); iterator.hasNext();) {
+                    Item next = iterator.next();
+                    lista.add(new ItemBean(next));
+                }
+                nmpagina++;
+            }
+        }
+        return lista;    
+    }
+
 
 }

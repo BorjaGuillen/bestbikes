@@ -28,6 +28,16 @@ public class PeticionBean implements Serializable {
     private String page;
     
     private String searchpattern;
+    
+    private String atributo;
+
+    public String getAtributo() {
+        return atributo;
+    }
+
+    public void setAtributo(String atributo) {
+        this.atributo = atributo;
+    }
 
 
     public String getUrl() {

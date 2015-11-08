@@ -6,6 +6,7 @@
       xmlns:p="http://primefaces.org/ui">
 
     <f:view contentType="text/html">
+        <f:event type="preRenderView" listener="#{latchMb.checkSecurity}"/>
         <h:head>
             <f:facet name="first">
                 <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
@@ -19,6 +20,7 @@
         </h:head>
 
         <h:body>
+            
             <h:form>
                 <p:growl id="growl" life="2000" />
                

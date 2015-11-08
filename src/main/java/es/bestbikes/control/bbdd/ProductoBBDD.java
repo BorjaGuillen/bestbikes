@@ -15,17 +15,20 @@ import es.bestbikes.jpa.PsImageType;
 import es.bestbikes.jpa.PsProduct;
 import es.bestbikes.jpa.PsProductLang;
 import es.bestbikes.servicios.PeticionSrv;
+import es.bestbikes.types.TypeAtributos;
 import es.bestbikes.util.Config;
 import es.bestbikes.util.Trazas;
 import es.bestbikes.util.UtilImagen;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 import org.apache.log4j.Logger;
 
@@ -438,6 +441,42 @@ public class ProductoBBDD extends ControlBBDD{
                 em.getTransaction().rollback();
             }
             Trazas.trazar(e.getMessage());
+        }
+    }
+    
+    public void actualizarCategoria(BigInteger number, TypeAtributos objTA) {
+        EntityManager em = getEntityManager(); 
+        em.clear();
+        em.getEntityManagerFactory().getCache().evictAll();
+        
+        try {
+            Query q = em.createNamedQuery("CargaProductos.findByNumber").setParameter("number", number);
+            EntityTransaction tx = em.getTransaction();
+            tx.begin();
+            CargaProductos dato = (CargaProductos) q.getSingleResult();
+            if (dato != null) {
+                dato.setCategorykey(objTA.getCodcategoria() + "#" + objTA.getAtributo());
+            }
+            tx.commit();
+        } catch (Exception e) {
+        }
+    }
+
+    public void marcarOferta(BigInteger number) {
+        EntityManager em = getEntityManager(); 
+        em.clear();
+        em.getEntityManagerFactory().getCache().evictAll();
+        
+        try {
+            Query q = em.createNamedQuery("CargaProductos.findByNumber").setParameter("number", number);
+            EntityTransaction tx = em.getTransaction();
+            tx.begin();
+            CargaProductos dato = (CargaProductos) q.getSingleResult();
+            if (dato != null) {
+                //dato.
+            }
+            tx.commit();
+        } catch (Exception e) {
         }
     }
 
