@@ -333,7 +333,7 @@ public class PeticionSrv {
     }
 
 
-    List<ItemBean> obtenerItemsPorAtributo(TypeAtributos objTA) {
+    public List<ItemBean> obtenerItemsPorAtributo(TypeAtributos objTA) {
         List<ItemBean> lista = new ArrayList<ItemBean>();
         
         int nmpagina = 1;
