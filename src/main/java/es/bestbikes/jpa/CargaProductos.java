@@ -50,6 +50,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "CargaProductos.findByCargar", query = "SELECT c FROM CargaProductos c WHERE c.cargar = :cargar"),
     @NamedQuery(name = "CargaProductos.findByFccarga", query = "SELECT c FROM CargaProductos c WHERE c.fccarga = :fccarga")})
 public class CargaProductos implements Serializable {
+    @Column(name = "En_oferta")
+    private Boolean enoferta;
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -341,6 +343,14 @@ public class CargaProductos implements Serializable {
     @Override
     public String toString() {
         return "es.bestbikes.bean.CargaProductos[ number=" + number + " ]";
+    }
+
+    public Boolean getEnoferta() {
+        return enoferta;
+    }
+
+    public void setEnoferta(Boolean enoferta) {
+        this.enoferta = enoferta;
     }
     
 }

@@ -473,7 +473,7 @@ public class ProductoBBDD extends ControlBBDD{
             tx.begin();
             CargaProductos dato = (CargaProductos) q.getSingleResult();
             if (dato != null) {
-                //dato.
+                dato.setEnoferta(Boolean.TRUE);
             }
             tx.commit();
         } catch (Exception e) {
