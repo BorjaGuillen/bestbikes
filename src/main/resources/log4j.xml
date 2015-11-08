@@ -9,7 +9,7 @@
     </appender>
     
     <appender name="archivo" class="org.apache.log4j.FileAppender">
-        <param name="file" value="/var/log/tomcat7/bestbike.log" />
+        <param name="file" value="/var/log/tomcat8/bestbike.log" />
         <layout class="org.apache.log4j.EnhancedPatternLayout">
             <param name="ConversionPattern" value="%d{dd MMM yyyy - HH:mm:ss} %-5p [%t] [%l] %x - %m%n %throwable" />
         </layout>

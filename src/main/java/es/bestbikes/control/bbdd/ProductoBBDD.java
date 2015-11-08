@@ -450,15 +450,17 @@ public class ProductoBBDD extends ControlBBDD{
         em.getEntityManagerFactory().getCache().evictAll();
         
         try {
-            Query q = em.createNamedQuery("CargaProductos.findByNumber").setParameter("number", number);
+            Query q = em.createNamedQuery("CargaProductos.findByNumber").setParameter("number", number.longValue()+"");
             EntityTransaction tx = em.getTransaction();
-            tx.begin();
             CargaProductos dato = (CargaProductos) q.getSingleResult();
             if (dato != null) {
+                tx.begin();
                 dato.setCategorykey(objTA.getCodcategoria() + "#" + objTA.getAtributo());
+                em.persist(dato);
+                tx.commit();
             }
-            tx.commit();
         } catch (Exception e) {
+            Trazas.trazarError(e.getMessage());
         }
     }
 
@@ -468,15 +470,17 @@ public class ProductoBBDD extends ControlBBDD{
         em.getEntityManagerFactory().getCache().evictAll();
         
         try {
-            Query q = em.createNamedQuery("CargaProductos.findByNumber").setParameter("number", number);
+            Query q = em.createNamedQuery("CargaProductos.findByNumber").setParameter("number", number.longValue()+"");
             EntityTransaction tx = em.getTransaction();
-            tx.begin();
             CargaProductos dato = (CargaProductos) q.getSingleResult();
             if (dato != null) {
+                tx.begin();
                 dato.setEnoferta(Boolean.TRUE);
+                em.persist(dato);
+                tx.commit();
             }
-            tx.commit();
         } catch (Exception e) {
+            Trazas.trazarError(e.getMessage());
         }
     }
 
