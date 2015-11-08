@@ -20,7 +20,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `cargarProducto`(
 )
 BEGIN
 
-	DECLARE v_id_categoria int(10) DEFAULT 2;
+	DECLARE v_id_categoria int(10) DEFAULT -1;
 	DECLARE v_id_marca int (10) DEFAULT 0;
 	DECLARE v_id_product int (10) DEFAULT 0;
 	DECLARE v_id_image int (10) DEFAULT 0;
@@ -120,24 +120,24 @@ Obtemos el valor actual de impuestos con la id_tax 1
 
 	
 	/*
-             Buscamos la categoria en la tabla de catPS_catRV, en caso de no encontrarla se cargara la categoría por defecto 2, que es inicio. 	
+             Buscamos la categoria en la tabla de catPS_catRV, en caso de no encontrarla no cargamos el producto. 	
 	*/
 
 	select id_categoria from bestbike_bd.catPS_catSRV where categorykey=V_categorykey INTO v_id_categoria;
 	
 
 -- -----------------------------------------------------------------------------------------
-	IF v_id_product=0 AND v_error=0 THEN -- Si el elemento no existe insertamos
-SELECT 'Si el elemento no existe insertamos';	
+	IF v_id_product=0 AND v_error=0 AND v_id_categoria!=-1 THEN -- Si el elemento no existe insertamos, siempre que tengamos categoría para el producto.
 
-SELECT 	'v_id_marca=',v_id_marca,
+        SELECT 	'v_id_marca=',v_id_marca,
 		'v_id_categoria=',v_id_categoria,
 		'V_recommendedretailprice= ',V_recommendedretailprice,
 		'V_supplieritemnumber= ',V_supplieritemnumber
 		'V_number= ', V_number
 		'V_availablestatus= ',V_availablestatus
 		'sysdate= ', now();
-		INSERT INTO bestbike_bd.ps_product (
+	
+        INSERT INTO bestbike_bd.ps_product (
 
 					id_supplier,
 					id_manufacturer,
@@ -192,8 +192,8 @@ SELECT 	'v_id_marca=',v_id_marca,
 					v_id_marca, -- id_manufacturer,
 					v_id_categoria, -- id_category_default
 					1, -- id_shop_default,
-					1, -- id_tax_rules_group,
-					0, -- on_sale,
+					1, -- id_tax_rules_group
+					0, -- on_sale, CAMPO PARA OFERTAS
 					0, -- online_only,
 					'', -- ean13,
 					'', -- upc,
@@ -320,7 +320,7 @@ SELECT 	'v_id_marca=',v_id_marca,
                     0, -- id_product_attribute    int(11) UN
                     1, -- id_shop    int(11) UN
                     0, -- id_shop_group    int(11) UN
-                    1, -- quantity    int(10)
+                    10, -- quantity    int(10)
                     0, -- depends_on_stock    tinyint(1) UN
                     1 -- out_of_stock    tinyint(1) UN
                 );					
@@ -451,21 +451,27 @@ SELECT 	'v_id_marca=',v_id_marca,
 				1 -- id_shop	int(10) UN PK
 			);
 
-	ELSE -- aux_count El elemento ya existia y vamos a actualizarlo
+	ELSE 
+		IF v_id_categoria!=-1 THEN-- aux_count El elemento ya existia y vamos a actualizarlo. No cogemos las cartegorias -1 porque no hemos podido clasificarlo.
 
 		
-		update ps_product 
-		SET price= V_recommendedretailprice,
-			active=V_availablestatus, 
-			date_upd=now()
-		WHERE id_product=v_id_product;
+			update ps_product 
+			SET price= V_recommendedretailprice,
+                            active=V_availablestatus, 
+                            date_upd=now(),
+                            id_category_default=v_id_categoria                            
+			WHERE id_product=v_id_product;
+                        
+                        update ps_product_shop 
+			SET price= V_recommendedretailprice,
+				active=V_availablestatus, 
+				date_upd=now()
+			WHERE id_product=v_id_product;
 
-                update ps_product_shop 
-		SET price= V_recommendedretailprice,
-			active=V_availablestatus, 
-			date_upd=now()
-		WHERE id_product=v_id_product;
+      
 
+
+		END IF; -- v_id_categoria!=-1
 		
 
 	END IF; -- v_id_product=0
