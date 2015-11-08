@@ -7,6 +7,8 @@ package es.bestbikes.servicios;
 
 import es.bestbikes.bean.ItemBean;
 import es.bestbikes.control.bbdd.ProductoBBDD;
+import es.bestbikes.jpa.CargaProductos;
+import es.bestbikes.types.TypeAtributos;
 import es.bestbikes.util.Robot;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +55,8 @@ public class MultiPeticionSrv {
             esperarXsegundos(1);
         }
         
+        solicitarAtributos();
+        
     }
     
     public void eliminarRobot(Robot r) {
@@ -66,5 +70,24 @@ public class MultiPeticionSrv {
                 Thread.currentThread().interrupt();
         }
     }    
+
+    private void solicitarAtributos() {
+        PeticionSrv srv = PeticionSrv.getInstance();
+        ProductoBBDD bbdd = ProductoBBDD.getInstancia();
+
+        TypeAtributos[] listaTA = TypeAtributos.values();
+        for (TypeAtributos objTA : listaTA) {
+            List<ItemBean> listaItems = srv.obtenerItemsPorAtributo(objTA);
+            if (TypeAtributos.GANGAS == objTA || TypeAtributos.OFERTA_ESPECIAL == objTA) {
+                for (ItemBean item : listaItems) {
+                    bbdd.marcarOferta(item.getNumber());
+                }
+            } else {
+                for (ItemBean item : listaItems) {
+                    bbdd.actualizarCategoria(item.getNumber(), objTA);
+                }
+            }
+        }
+    }
     
 }
