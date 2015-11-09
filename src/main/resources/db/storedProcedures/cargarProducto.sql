@@ -468,8 +468,9 @@ Obtemos el valor actual de impuestos con la id_tax 1
 				date_upd=now()
 			WHERE id_product=v_id_product;
 
-      
-
+                        update ps_category_product 
+                        SET id_category=v_id_categoria
+                        WHERE id_product=v_id_product;
 
 		END IF; -- v_id_categoria!=-1
 		

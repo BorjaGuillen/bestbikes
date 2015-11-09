@@ -102,8 +102,16 @@ OPEN ACargar;
  CLOSE ACargar;
 
 update ps_stock_available set quantity=10;
+
 update ps_product set on_sale=0 where length(supplier_reference)>0;
 update ps_product set on_sale=1 where supplier_reference in (select number from cargaProductos where  En_oferta=1);
+
+update ps_product_shop set on_sale=0 where id_product in (
+	select id_product from ps_product where length(supplier_reference)>0);
+
+update ps_product_shop set on_sale=1 where id_product in ( 
+	select id_product from ps_product where supplier_reference in (
+		select number from cargaProductos where  En_oferta=1));
 
 SELECT 'FIN';	
 END$$
