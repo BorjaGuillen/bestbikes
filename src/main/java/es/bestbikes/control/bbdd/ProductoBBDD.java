@@ -429,7 +429,7 @@ public class ProductoBBDD extends ControlBBDD{
                     if (psLang.getDescription() == null) {
                         psLang.setDescription("");
                     }
-                    psLang.setDescription(psLang.getDescription() + "<br>" + html);
+                    psLang.setDescription(psLang.getDescriptionShort() + "<br>" + html);
                     em.getTransaction().begin();
                     em.persist(psLang);
                     em.getTransaction().commit();
