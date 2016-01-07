@@ -458,20 +458,18 @@ Obtemos el valor actual de impuestos con la id_tax 1
 			update ps_product 
 			SET price= V_recommendedretailprice,
                             active=V_availablestatus, 
-                            date_upd=now(),
-                            id_category_default=v_id_categoria                            
+                            date_upd=now()
 			WHERE id_product=v_id_product;
                         
                         update ps_product_shop 
 			SET price= V_recommendedretailprice,
 				active=V_availablestatus, 
-				date_upd=now(),
-                                id_category_default=v_id_categoria
+				date_upd=now()
 			WHERE id_product=v_id_product;
 
-                        update ps_category_product 
+                        /* update ps_category_product 
                         SET id_category=v_id_categoria
-                        WHERE id_product=v_id_product;
+                        WHERE id_product=v_id_product and id_category!=8636; */
 
 		END IF; -- v_id_categoria!=-1
 		

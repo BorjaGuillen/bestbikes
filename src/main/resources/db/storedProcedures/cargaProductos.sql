@@ -25,9 +25,7 @@ BEGIN
 	DECLARE V_pictureurl			varchar(200);
 
 	DECLARE finished INTEGER DEFAULT 0;
-
-	
-
+        
 	DECLARE ACargar CURSOR 
 		FOR SELECT 
 			number,
@@ -47,12 +45,16 @@ BEGIN
 			categorykey,
 			infourl,
 			pictureurl	
-		from bestbike_bd.cargaProductos where cargar=1;
-
-
+		from bestbike_bd.cargaProductos where cargar=1
+                order by number asc;        
+        
 	DECLARE CONTINUE HANDLER
 	 FOR NOT FOUND SET finished = 1; 
-	
+
+       DECLARE CONTINUE HANDLER FOR 1062
+       SELECT V_number AS Error_en_number;
+
+delete from ps_category_product where id_category='8636';
 OPEN ACargar;
 
  get_registro: LOOP
@@ -112,6 +114,8 @@ update ps_product_shop set on_sale=0 where id_product in (
 update ps_product_shop set on_sale=1 where id_product in ( 
 	select id_product from ps_product where supplier_reference in (
 		select number from cargaProductos where  En_oferta=1));
+
+insert into ps_category_product SELECT 8636,`ps_product`.`id_product`, @rownum:=@rownum+1 AS rownum FROM (SELECT @rownum:=0) r, `ps_product` where `ps_product`.on_sale=1;
 
 SELECT 'FIN';	
 END$$
