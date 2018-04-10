@@ -20,9 +20,7 @@ import java.util.List;
 public class MultiPeticionSrv {
     
     private static MultiPeticionSrv srv;
-    
     private List<Robot> lista = new ArrayList<Robot>();
-
     private MultiPeticionSrv() {
         super();
     }
