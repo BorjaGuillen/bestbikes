@@ -7,6 +7,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `cargaProductos`(IN incremento decim
 BEGIN
 	
 	DECLARE V_number 			varchar(200) ;
+	
 	DECLARE V_unitprice			decimal(20,6) ;
 	DECLARE V_scaledunitprice		decimal(20,6);
 	DECLARE V_recommendedretailprice	decimal(20,6);
